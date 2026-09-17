@@ -38,22 +38,19 @@ const teamMembers: TeamMember[] = [
     role: "Founder & CEO",
     description:
       "Guides Handi-X’s vision, bringing together technology, creativity and practical learning.",
-    image: "/team/marvelous.jpg",
+    image: "",
     imagePosition: "center top",
     background: "#e6eae7",
     socials: [
       {
         platform: "linkedin",
-        href: "https://example.com/marvelous/linkedin",
+        href: "https://www.linkedin.com/public-profile/settings/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_self_edit_contact_info%3By8aaz6mySKaZ%2BNzUG6j8HA%3D%3D",
       },
       {
         platform: "instagram",
-        href: "https://example.com/marvelous/instagram",
+        href: "https://www.instagram.com/marvelous_oba/?utm_source=ig_web_button_share_sheet",
       },
-      {
-        platform: "x",
-        href: "https://example.com/marvelous/x",
-      },
+   
     ],
   },
   {
@@ -68,17 +65,13 @@ const teamMembers: TeamMember[] = [
     socials: [
       {
         platform: "linkedin",
-        href: "https://example.com/emmanuel/linkedin",
+        href: "https://www.linkedin.com/in/emmanuel-odunaiya",
       },
       {
         platform: "instagram",
-        href: "https://example.com/emmanuel/instagram",
+        href: "https://www.instagram.com/iemmanuelodunaiya?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==",
       },
-      {
-        platform: "x",
-        href: "https://example.com/emmanuel/x",
-      },
-    ],
+       ],
   },
   {
     id: "mayowa",
@@ -96,12 +89,10 @@ const teamMembers: TeamMember[] = [
       },
       {
         platform: "instagram",
-        href: "https://example.com/mayowa/instagram",
+        href: "https://www.instagram.com/the_mayowa_ajiboye?stkn=amZhenBsMXNhN2tk&utm_source=qr",
       },
-      {
-        platform: "x",
-        href: "https://example.com/mayowa/x",
-      },
+    
+   
     ],
   },
   {
@@ -116,15 +107,15 @@ const teamMembers: TeamMember[] = [
     socials: [
       {
         platform: "linkedin",
-        href: "https://example.com/iretomiwa/linkedin",
+        href: "https://www.linkedin.com/in/iretomiwa-odetayo-716374417?utm_source=share_via&utm_content=profile&utm_medium=member_android",
       },
       {
         platform: "instagram",
-        href: "https://example.com/iretomiwa/instagram",
+        href: "https://www.instagram.com/iretomiwahavilah?stkn=ZDJpdTd6c2x0eGl3",
       },
       {
         platform: "x",
-        href: "https://example.com/iretomiwa/x",
+        href: "https://x.com/IreContentCo",
       },
     ],
   },

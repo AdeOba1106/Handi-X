@@ -11,6 +11,9 @@ const navLinks = [
   { name: "Team", href: "#team" },
 ];
 
+const whatsappLink =
+  "https://wa.me/2347051925253?text=Hello%20Handi-X%2C%20I%27d%20like%20to%20talk%20about%20my%20project.";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -64,7 +67,6 @@ const Navbar = () => {
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-50">
       <nav aria-label="Main navigation" className="relative w-full">
         <div className="flex h-[72px] items-center justify-between gap-4 border-b border-white/[0.06] bg-[#0b1020] px-5 sm:px-8 lg:grid lg:h-20 lg:grid-cols-[1fr_auto_1fr] lg:gap-8 lg:px-10">
-          {/* Larger logo icon */}
           <a
             href="#"
             onClick={closeMenu}
@@ -86,7 +88,6 @@ const Navbar = () => {
             />
           </a>
 
-          {/* Desktop links */}
           <ul className="hidden items-center gap-8 lg:flex">
             {navLinks.map((link) => (
               <li key={link.name}>
@@ -105,9 +106,10 @@ const Navbar = () => {
             ))}
           </ul>
 
-          {/* Desktop contact */}
           <a
-            href="#contact"
+            href={whatsappLink}
+            target="_blank"
+            rel="noopener noreferrer"
             className="font-sora group hidden min-h-11 items-center gap-4 justify-self-end rounded-lg bg-[#05cde5] px-4 text-[13px] font-semibold text-[#0b1020] transition-colors duration-200 hover:bg-[#42d9eb] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white lg:inline-flex"
           >
             Let’s talk
@@ -119,7 +121,6 @@ const Navbar = () => {
             />
           </a>
 
-          {/* Mobile toggle */}
           <button
             ref={menuButtonRef}
             type="button"
@@ -143,7 +144,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile dropdown */}
         <div
           id="mobile-navigation"
           inert={!isOpen}
@@ -184,7 +184,9 @@ const Navbar = () => {
               </ul>
 
               <a
-                href="#contact"
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={closeMenu}
                 className="font-sora mt-5 flex min-h-[52px] items-center justify-between gap-4 rounded-lg bg-[#05cde5] px-4 py-3 text-sm font-semibold text-[#0b1020] transition-colors hover:bg-[#42d9eb] focus-visible:outline-2 focus-visible:outline-[#0b1020]"
               >
