@@ -23,7 +23,7 @@ type CalendlyWindow = Window & {
 const headlines = [
   { text: "needs to be", highlight: "heard." },
   { text: "needs to be", highlight: "seen." },
-  { text: "should have an", highlight: "identity." },
+  { text: "needs an ", highlight: "identity." },
 ];
 
 const Hero = () => {

@@ -14,7 +14,7 @@ const footerLinks = [
 const socialLinks = [
   {
     label: "Instagram",
-    href: "https://instagram.com/handi.x",
+    href: "https://instagram.com/handixofficial",
     icon: Instagram,
   },
   {
@@ -22,11 +22,7 @@ const socialLinks = [
     href: "https://linkedin.com/company/handi-x",
     icon: Linkedin,
   },
-  {
-    label: "X",
-    href: "https://x.com/handi_x",
-    icon: XIcon,
-  },
+
 ];
 
 function XIcon({ size = 16 }: { size?: number }) {
@@ -136,11 +132,11 @@ export default function Footer() {
             </p>
 
             <a
-              href="mailto:hello@example.com"
+              href="mailto:heyhandix@gmail.com"
               className="font-sora mt-3 inline-flex min-h-10 max-w-full items-center gap-2 break-all text-xs font-medium text-white transition-colors hover:text-[#05cde5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] min-[400px]:text-sm sm:mt-4 sm:text-base"
             >
               <Mail size={15} className="shrink-0 text-[#05cde5]" />
-              <span>hello@example.com</span>
+              <span>heyhandix@gmail.com</span>
               <ArrowUpRight size={14} className="shrink-0" />
             </a>
 

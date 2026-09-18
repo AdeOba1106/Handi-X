@@ -16,10 +16,22 @@ const whatsappLink =
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const closeMenu = () => setIsOpen(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 12);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
@@ -66,7 +78,13 @@ const Navbar = () => {
   return (
     <header ref={headerRef} className="fixed inset-x-0 top-0 z-50">
       <nav aria-label="Main navigation" className="relative w-full">
-        <div className="flex h-[72px] items-center justify-between gap-4 border-b border-white/[0.06] bg-[#0b1020] px-5 sm:px-8 lg:grid lg:h-20 lg:grid-cols-[1fr_auto_1fr] lg:gap-8 lg:px-10">
+        <div
+          className={`flex h-[72px] items-center justify-between gap-4 border-b px-5 transition-colors duration-300 sm:px-8 lg:grid lg:h-20 lg:grid-cols-[1fr_auto_1fr] lg:gap-8 lg:px-10 ${
+            isScrolled
+              ? "border-white/[0.06] bg-[#0b1020]"
+              : "border-[#0b1020]/10 bg-[#f9f9f9]"
+          }`}
+        >
           <a
             href="#"
             onClick={closeMenu}
@@ -74,7 +92,7 @@ const Navbar = () => {
             className="group relative inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#05cde5] lg:h-16 lg:w-16"
           >
             <Image
-              src="/Handi-X Blue-Cyan.svg"
+              src="/Handi-X Blue.svg"
               alt="Handi-X"
               width={72}
               height={72}
@@ -93,7 +111,11 @@ const Navbar = () => {
               <li key={link.name}>
                 <a
                   href={link.href}
-                  className="font-sora group relative inline-flex min-h-11 items-center text-[13px] font-medium text-white/70 transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#05cde5]"
+                  className={`font-sora group relative inline-flex min-h-11 items-center text-[13px] font-medium transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#05cde5] ${
+                    isScrolled
+                      ? "text-white/70 hover:text-white"
+                      : "text-[#0b1020]/70 hover:text-[#0b1020]"
+                  }`}
                 >
                   {link.name}
 
@@ -130,7 +152,11 @@ const Navbar = () => {
             aria-expanded={isOpen}
             aria-controls="mobile-navigation"
             onClick={() => setIsOpen((previous) => !previous)}
-            className="inline-flex min-h-11 items-center gap-3 rounded-lg px-3 text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#05cde5] lg:hidden"
+            className={`inline-flex min-h-11 items-center gap-3 rounded-lg px-3 transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#05cde5] lg:hidden ${
+              isScrolled
+                ? "text-white hover:bg-white/10"
+                : "text-[#0b1020] hover:bg-[#0b1020]/10"
+            }`}
           >
             <span className="font-sora text-xs font-medium">
               {isOpen ? "Close" : "Menu"}

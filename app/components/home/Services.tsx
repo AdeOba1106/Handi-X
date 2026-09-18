@@ -36,7 +36,6 @@ const serviceGroups: ServiceGroup[] = [
     icon: Sparkles,
     services: [
       "Graphic Design",
-      "UI/UX Design",
       "Web Development",
       "Video Creatives & Editing",
       "Social Media Creatives",
@@ -81,7 +80,6 @@ const serviceGroups: ServiceGroup[] = [
     icon: GraduationCap,
     services: [
       "Graphic Design Training",
-      "UI/UX Design Training",
       "Web Development Training",
       "Digital Marketing Training",
       "Data Analysis Training",

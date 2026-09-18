@@ -1,21 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "framer-motion";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Pause,
-  Play,
-  Quote,
-} from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Quote } from "lucide-react";
 
-// Replace each placeholder below with real client or learner feedback.
-// Add more objects to create additional testimonial cards.
 const testimonials = [
   {
     id: "01",
@@ -43,70 +30,17 @@ const testimonials = [
   },
   {
     id: "04",
-    quote: "Paste a participant’s actual feedback about your training here.",
-    name: "Participant full name",
+    quote:
+      "This training made me really understand how to design and think like a designer. The training periods were awesome, and I never have any regrets joining. If it is possible, I would like to register again.",
+    name: "Ayodeji Somotun",
     role: "Graphic Design Training Participant",
     service: "Handi-X Academy",
-    initials: "PN",
+    initials: "AS",
   },
 ];
 
 const Testimonials = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-  const [isPageVisible, setIsPageVisible] = useState(true);
-
   const reduceMotion = useReducedMotion();
-  const activeTestimonial = testimonials[activeIndex];
-
-  const isPlaying =
-    !reduceMotion &&
-    !isPaused &&
-    !isHovered &&
-    !isFocused &&
-    isPageVisible;
-
-  const changeSlide = (step: number) => {
-    setDirection(step);
-    setActiveIndex(
-      (previous) =>
-        (previous + step + testimonials.length) % testimonials.length,
-    );
-  };
-
-  const selectSlide = (index: number) => {
-    if (index === activeIndex) return;
-
-    setDirection(index > activeIndex ? 1 : -1);
-    setActiveIndex(index);
-  };
-
-  useEffect(() => {
-    const handleVisibility = () => {
-      setIsPageVisible(!document.hidden);
-    };
-
-    handleVisibility();
-    document.addEventListener("visibilitychange", handleVisibility);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const timeout = window.setTimeout(() => {
-      setDirection(1);
-      setActiveIndex((previous) => (previous + 1) % testimonials.length);
-    }, 6000);
-
-    return () => window.clearTimeout(timeout);
-  }, [activeIndex, isPlaying]);
 
   return (
     <section
@@ -114,8 +48,7 @@ const Testimonials = () => {
       aria-labelledby="testimonials-heading"
       className="scroll-mt-20 overflow-hidden bg-[#edf1f2] py-12 sm:py-16 lg:py-20"
     >
-      <div className="mx-auto max-w-[1200px] px-5 sm:px-8 lg:px-10">
-        {/* Introduction */}
+      <div className="mx-auto max-w-[1040px] px-5 sm:px-8 lg:px-10">
         <div className="mb-7 flex flex-col gap-3 sm:mb-9 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
           <div>
             <p className="font-poppins mb-3 text-[10px] font-medium uppercase tracking-[0.2em] text-[#0b1020]/55 sm:text-xs">
@@ -135,188 +68,58 @@ const Testimonials = () => {
           </p>
         </div>
 
-        {/* Carousel */}
-        <div
-          role="region"
-          aria-roledescription="carousel"
-          aria-label="Client testimonials"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onFocusCapture={() => setIsFocused(true)}
-          onBlurCapture={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget)) {
-              setIsFocused(false);
-            }
-          }}
-          className="overflow-hidden rounded-2xl bg-[#0b1020] p-5 text-white sm:p-8 lg:px-10"
-        >
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <span className="font-poppins text-[10px] font-medium uppercase tracking-[0.14em] text-[#05cde5] sm:text-xs">
-              {activeTestimonial.service}
-            </span>
+        <div className="grid grid-cols-2 items-stretch gap-2 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+          {testimonials.map((testimonial, index) => (
+            <motion.article
+              key={testimonial.id}
+              initial={{ opacity: 0, y: reduceMotion ? 0 : 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.35,
+                delay: reduceMotion ? 0 : index * 0.05,
+              }}
+              className="flex h-[240px] min-w-0 flex-col justify-between overflow-hidden rounded-[1rem] bg-[#0b1020] p-3 text-white shadow-[0_8px_26px_rgba(11,16,32,0.08)] transition-transform duration-300 hover:-translate-y-1 sm:h-[225px] sm:rounded-[1.15rem] sm:p-5 lg:h-[235px]"
+            >
+              <div className="min-w-0">
+                <div className="flex min-w-0 items-start justify-between gap-2">
+                  <span className="font-poppins min-w-0 flex-1 whitespace-normal break-words line-clamp-2 text-[8px] font-medium uppercase leading-3 tracking-[0.1em] text-[#05cde5] sm:text-[10px] sm:tracking-[0.14em]">
+                    {testimonial.service}
+                  </span>
 
-            <Quote
-              size={26}
-              strokeWidth={1.3}
-              aria-hidden="true"
-              className="shrink-0 text-white/25"
-            />
-          </div>
-
-          <div
-            aria-live={isPlaying ? "off" : "polite"}
-            aria-atomic="true"
-            className="grid"
-          >
-            {/* Reserve space so different quote lengths do not shift the layout */}
-            {testimonials.map((testimonial) => (
-              <div
-                key={`measure-${testimonial.id}`}
-                aria-hidden="true"
-                className="invisible col-start-1 row-start-1 min-w-0"
-              >
-                <p className="font-sora max-w-[880px] break-words text-[clamp(1.15rem,2.5vw,2rem)] font-medium leading-[1.55] tracking-[-0.025em]">
-                  “{testimonial.quote}”
-                </p>
-
-                <div className="mt-6 flex items-center gap-3 sm:mt-8">
-                  <div className="h-11 w-11 shrink-0" />
-                  <div className="min-w-0">
-                    <p className="font-sora break-words text-xs font-medium sm:text-sm">
-                      {testimonial.name}
-                    </p>
-                    <p className="font-poppins mt-1 break-words text-[11px] sm:text-xs">
-                      {testimonial.role}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-
-            <AnimatePresence initial={false} mode="wait" custom={direction}>
-              <motion.div
-                key={activeTestimonial.id}
-                custom={direction}
-                variants={{
-                  enter: (slideDirection: number) => ({
-                    opacity: 0,
-                    x: reduceMotion ? 0 : slideDirection * 28,
-                  }),
-                  visible: { opacity: 1, x: 0 },
-                  exit: (slideDirection: number) => ({
-                    opacity: 0,
-                    x: reduceMotion ? 0 : slideDirection * -28,
-                  }),
-                }}
-                initial="enter"
-                animate="visible"
-                exit="exit"
-                transition={{
-                  duration: reduceMotion ? 0 : 0.3,
-                  ease: "easeOut",
-                }}
-                drag={reduceMotion ? false : "x"}
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.12}
-                onDragEnd={(_, info) => {
-                  if (info.offset.x < -50) changeSlide(1);
-                  else if (info.offset.x > 50) changeSlide(-1);
-                }}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`${activeIndex + 1} of ${testimonials.length}`}
-                className="col-start-1 row-start-1 min-w-0 touch-pan-y"
-              >
-                <figure>
-                  <blockquote className="font-sora max-w-[880px] break-words text-[clamp(1.15rem,2.5vw,2rem)] font-medium leading-[1.55] tracking-[-0.025em]">
-                    <p>“{activeTestimonial.quote}”</p>
-                  </blockquote>
-
-                  <figcaption className="mt-6 flex items-center gap-3 sm:mt-8">
-                    <div
-                      aria-hidden="true"
-                      className="font-sora flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-xs font-medium text-[#05cde5]"
-                    >
-                      {activeTestimonial.initials}
-                    </div>
-
-                    <div className="min-w-0">
-                      <p className="font-sora break-words text-xs font-medium sm:text-sm">
-                        {activeTestimonial.name}
-                      </p>
-                      <p className="font-poppins mt-1 break-words text-[11px] text-white/55 sm:text-xs">
-                        {activeTestimonial.role}
-                      </p>
-                    </div>
-                  </figcaption>
-                </figure>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Controls */}
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/10 pt-3 sm:mt-8">
-            <div className="flex flex-wrap items-center">
-              {testimonials.map((testimonial, index) => (
-                <button
-                  key={testimonial.id}
-                  type="button"
-                  onClick={() => selectSlide(index)}
-                  aria-label={`Show testimonial ${index + 1}`}
-                  aria-current={activeIndex === index ? "true" : undefined}
-                  className="flex h-11 w-8 items-center justify-center rounded-sm focus-visible:outline-2 focus-visible:outline-[#05cde5]"
-                >
-                  <span
+                  <Quote
+                    size={21}
+                    strokeWidth={1.3}
                     aria-hidden="true"
-                    className={`h-1 rounded-full transition-[width,background-color] duration-300 motion-reduce:transition-none ${
-                      activeIndex === index
-                        ? "w-6 bg-[#05cde5]"
-                        : "w-2 bg-white/30"
-                    }`}
+                    className="shrink-0 text-white/25"
                   />
-                </button>
-              ))}
-            </div>
+                </div>
 
-            <div className="flex items-center gap-2">
-              {!reduceMotion && (
-                <button
-                  type="button"
-                  onClick={() => setIsPaused((previous) => !previous)}
-                  aria-label={
-                    isPaused
-                      ? "Enable automatic rotation"
-                      : "Pause automatic rotation"
-                  }
-                  className="flex h-11 w-11 items-center justify-center rounded-full text-white/65 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-[#05cde5]"
+                <blockquote className="font-sora mt-3 whitespace-normal break-words line-clamp-5 overflow-hidden text-[11px] font-medium leading-5 tracking-[-0.02em] text-white/95 sm:mt-4 sm:text-sm sm:leading-6">
+                  “{testimonial.quote}”
+                </blockquote>
+              </div>
+
+              <footer className="mt-3 flex min-h-[45px] min-w-0 items-center gap-2 border-t border-white/10 pt-2.5 sm:mt-5 sm:gap-2.5 sm:pt-3">
+                <div
+                  aria-hidden="true"
+                  className="font-sora flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/10 text-[9px] font-medium text-[#05cde5] sm:h-8 sm:w-8 sm:text-[10px]"
                 >
-                  {isPaused ? (
-                    <Play size={16} aria-hidden="true" />
-                  ) : (
-                    <Pause size={16} aria-hidden="true" />
-                  )}
-                </button>
-              )}
+                  {testimonial.initials}
+                </div>
 
-              <button
-                type="button"
-                onClick={() => changeSlide(-1)}
-                aria-label="Previous testimonial"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition-colors hover:border-[#05cde5] hover:text-[#05cde5] focus-visible:outline-2 focus-visible:outline-[#05cde5]"
-              >
-                <ArrowLeft size={18} aria-hidden="true" />
-              </button>
+                <div className="min-w-0 flex-1">
+                  <p className="font-sora whitespace-normal break-words line-clamp-1 text-[10px] font-medium leading-4 sm:text-xs">
+                    {testimonial.name}
+                  </p>
 
-              <button
-                type="button"
-                onClick={() => changeSlide(1)}
-                aria-label="Next testimonial"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition-colors hover:border-[#05cde5] hover:text-[#05cde5] focus-visible:outline-2 focus-visible:outline-[#05cde5]"
-              >
-                <ArrowRight size={18} aria-hidden="true" />
-              </button>
-            </div>
-          </div>
+                  <p className="font-poppins mt-0.5 whitespace-normal break-words line-clamp-2 text-[8px] leading-4 text-white/50 sm:text-[11px] sm:leading-4">
+                    {testimonial.role}
+                  </p>
+                </div>
+              </footer>
+            </motion.article>
+          ))}
         </div>
       </div>
     </section>

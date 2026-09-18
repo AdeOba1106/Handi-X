@@ -23,7 +23,7 @@ const WHATSAPP_NUMBER = "2347051925253";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 // Replace this entire URL with your 30-minute Calendly event's booking link.
-const CALENDLY_URL = "https://calendly.com/YOUR_USERNAME/YOUR_EVENT";
+const CALENDLY_URL = "https://calendly.com/heyhandix/30min";
 
 type CalendlyWindow = Window & {
   Calendly?: {

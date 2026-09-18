@@ -7,6 +7,7 @@ import Testimonials from "./components/home/Testimonials";
 import Team from "./components/home/Team";
 import Contact from "./components/home/Contact";
 import Footer from "./components/common/Footer";
+import FAQ from "./components/home/FAQ";
 
 export default function RootLayout({
   children,
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Portfolio/>
        <Testimonials/>
        <Team/>
+       <FAQ/>
        <Contact/>
         <Footer />
         {children}
