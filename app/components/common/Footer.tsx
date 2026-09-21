@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import {
   FaInstagram as Instagram,
@@ -22,22 +23,7 @@ const socialLinks = [
     href: "https://linkedin.com/company/handi-x",
     icon: Linkedin,
   },
-
 ];
-
-function XIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg
-      aria-hidden="true"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.847h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.835L0 1.153h7.594l5.243 6.932 6.064-6.932ZM17.61 20.644h2.039L6.486 3.24H4.298L17.61 20.644Z" />
-    </svg>
-  );
-}
 
 export default function Footer() {
   return (
@@ -49,15 +35,15 @@ export default function Footer() {
             <a
               href="#"
               aria-label="Handi-X home"
-              className="inline-flex items-center gap-2"
+              className="inline-flex max-w-full items-center"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#05cde5] font-sora text-xs font-bold text-[#0b1020] sm:h-9 sm:w-9 sm:text-sm">
-                H
-              </span>
-
-              <span className="font-sora text-lg font-semibold tracking-[-0.06em] sm:text-xl">
-                Handi<span className="text-[#05cde5]">-X</span>
-              </span>
+              <Image
+                src="/white and cyan.svg"
+                alt="Handi-X"
+                width={220}
+                height={60}
+                className="h-auto w-[145px] max-w-full object-contain object-left sm:w-[175px] lg:w-[190px]"
+              />
             </a>
 
             <p className="font-sora mt-5 max-w-[300px] text-[25px] font-semibold leading-[1.08] tracking-[-0.05em] text-[#f9f9f9] min-[400px]:text-[28px] sm:mt-7 sm:text-4xl">
@@ -112,7 +98,7 @@ export default function Footer() {
                       rel="noopener noreferrer"
                       className="font-poppins inline-flex min-h-8 items-center gap-2 text-xs text-white/65 transition-colors hover:text-[#05cde5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:text-sm"
                     >
-                      <Icon size={14} strokeWidth={1.7} />
+                      <Icon size={14} />
                       {social.label}
                     </a>
                   </li>

@@ -213,14 +213,8 @@ function ProjectLightbox({
   const projectTotal = String(projectCount).padStart(2, "0");
 
   useEffect(() => {
-    setMediaIndex(0);
-    setMediaFailed(false);
     closeButtonRef.current?.focus();
-  }, [project.id]);
-
-  useEffect(() => {
-    setMediaFailed(false);
-  }, [mediaIndex]);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -237,6 +231,7 @@ function ProjectLightbox({
       const direction = event.key === "ArrowLeft" ? -1 : 1;
 
       if (event.shiftKey && mediaItems.length > 1) {
+        setMediaFailed(false);
         setMediaIndex(
           (currentIndex) =>
             (currentIndex + direction + mediaItems.length) % mediaItems.length,
@@ -253,15 +248,6 @@ function ProjectLightbox({
   }, [mediaItems.length, onClose, onNext, onPrevious]);
 
   const isExternal = /^https?:\/\//i.test(project.href ?? "");
-
-  function moveMedia(direction: number) {
-    if (mediaItems.length < 2) return;
-
-    setMediaIndex(
-      (currentIndex) =>
-        (currentIndex + direction + mediaItems.length) % mediaItems.length,
-    );
-  }
 
   return (
     <motion.div
@@ -373,7 +359,10 @@ function ProjectLightbox({
                     <button
                       key={`${media.src}-${index}`}
                       type="button"
-                      onClick={() => setMediaIndex(index)}
+                      onClick={() => {
+                        setMediaFailed(false);
+                        setMediaIndex(index);
+                      }}
                       aria-label={`View media ${index + 1} of ${mediaItems.length}`}
                       aria-current={active ? "true" : undefined}
                       className={`group relative h-9 w-12 shrink-0 overflow-hidden rounded-[0.55rem] border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] ${active ? "border-[#05cde5] opacity-100 ring-1 ring-[#05cde5]" : "border-transparent opacity-60 hover:opacity-100"}`}
@@ -534,9 +523,6 @@ export default function Portfolio() {
     let cancelled = false;
 
     async function loadProjects() {
-      setLoading(true);
-      setErrorMessage("");
-
       try {
         const supabase = createClient();
 
@@ -584,26 +570,30 @@ export default function Portfolio() {
         const mappedProjects: Project[] = projectRows
           .filter((project) => isProjectCategory(project.category))
           .map((project) => {
-            const additionalMedia = (mediaByProject.get(project.id) ?? []).map(
-              (media) => ({
-                src: publicUrl(media.file_path),
-                alt: media.alt_text || project.title,
-                type: media.media_type,
-                position: media.position ?? undefined,
-              }),
-            );
+            const additionalMedia: ProjectMedia[] = (
+              mediaByProject.get(project.id) ?? []
+            ).map((media) => ({
+              src: publicUrl(media.file_path),
+              alt: media.alt_text || project.title,
+              type: media.media_type,
+              position: media.position ?? undefined,
+            }));
 
-            const coverMedia = project.cover_path
+            const coverMedia: ProjectMedia[] = project.cover_path
               ? [
                   {
                     src: publicUrl(project.cover_path),
                     alt: project.title,
-                    type: "image" as const,
+                    type: "image",
+                    position: undefined,
                   },
                 ]
               : [];
 
-            const allMedia = [...coverMedia, ...additionalMedia].filter(
+            const allMedia: ProjectMedia[] = [
+              ...coverMedia,
+              ...additionalMedia,
+            ].filter(
               (media, index, collection) =>
                 media.src &&
                 collection.findIndex((item) => item.src === media.src) ===
@@ -670,23 +660,26 @@ export default function Portfolio() {
 
   const visibleProjects = filteredProjects;
 
-  useEffect(() => {
+  const selectedIndex = selectedProject
+    ? visibleProjects.findIndex((project) => project.id === selectedProject.id)
+    : -1;
+
+  function handleCategoryChange(category: Category) {
+    setActiveCategory(category);
     setCarouselIndex(0);
 
     if (carouselRef.current) {
       carouselRef.current.scrollLeft = 0;
     }
-  }, [activeCategory, projects.length]);
 
-  const selectedIndex = selectedProject
-    ? visibleProjects.findIndex((project) => project.id === selectedProject.id)
-    : -1;
-
-  useEffect(() => {
-    if (selectedProject && selectedIndex < 0) {
+    if (
+      selectedProject &&
+      category !== "All" &&
+      selectedProject.category !== category
+    ) {
       setSelectedProject(null);
     }
-  }, [selectedIndex, selectedProject]);
+  }
 
   function moveProject(direction: number) {
     if (!selectedProject || visibleProjects.length < 2) return;
@@ -776,7 +769,7 @@ export default function Portfolio() {
                         type="button"
                         aria-pressed={isActive}
                         aria-controls="portfolio-projects"
-                        onClick={() => setActiveCategory(category)}
+                        onClick={() => handleCategoryChange(category)}
                         className={
                           "font-poppins relative pb-1 text-[11px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2 " +
                           (isActive
@@ -893,7 +886,7 @@ export default function Portfolio() {
                     return (
                       <motion.article
                         key={project.id}
-                        data-portfolio-card
+                        data-portfolio-card="true"
                         layout
                         initial={{ opacity: 0, y: reduceMotion ? 0 : 12 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -988,6 +981,7 @@ export default function Portfolio() {
         <AnimatePresence>
           {selectedProject && selectedIndex >= 0 && (
             <ProjectLightbox
+              key={selectedProject.id}
               project={selectedProject}
               projectIndex={selectedIndex}
               projectCount={visibleProjects.length}
