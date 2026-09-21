@@ -8,6 +8,7 @@ import Team from "./components/home/Team";
 import Contact from "./components/home/Contact";
 import Footer from "./components/common/Footer";
 import FAQ from "./components/home/FAQ";
+import ImpactStats from "./components/home/impactstats";
 
 export default function RootLayout({
   children,
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body>
         <Navbar />
         <Hero/>
+        <ImpactStats />
         <Services />
         <Portfolio/>
        <Testimonials/>

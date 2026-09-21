@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
@@ -12,13 +11,10 @@ import {
   Play,
   X,
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
-type Category =
-  | "All"
-  | "Branding"
-  | "Web Development"
-  | "Graphic Design"
-  | "Video";
+type Category = "All" | "Branding" | "Graphic Design" | "Video";
+type ProjectCategory = Exclude<Category, "All">;
 
 type ProjectMedia = {
   src: string;
@@ -30,7 +26,7 @@ type ProjectMedia = {
 type Project = {
   id: string;
   title: string;
-  category: Exclude<Category, "All">;
+  category: ProjectCategory;
   description: string;
   image: string;
   imageAlt: string;
@@ -40,17 +36,43 @@ type Project = {
   linkLabel?: string;
   mediaType?: "image" | "video";
   gallery?: ProjectMedia[];
-  concept?: boolean;
-  placeholder?: boolean;
 };
 
-const categories: Category[] = [
-  "All",
-  "Branding",
-  // "Web Development",
-  "Graphic Design",
-  "Video",
-];
+type ProjectRow = {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  cover_path: string | null;
+  href: string | null;
+  link_label: string | null;
+  published: boolean;
+  sort_order: number | null;
+  created_at: string;
+};
+
+type MediaRow = {
+  project_id: string;
+  file_path: string;
+  media_type: "image" | "video";
+  alt_text: string | null;
+  position: string | null;
+  sort_order: number | null;
+};
+
+const categories: Category[] = ["All", "Branding", "Graphic Design", "Video"];
+
+const categoryBackgrounds: Record<ProjectCategory, string> = {
+  Branding: "#e8eeeb",
+  "Graphic Design": "#eee4d8",
+  Video: "#dce7e9",
+};
+
+function isProjectCategory(value: string): value is ProjectCategory {
+  return (
+    value === "Branding" || value === "Graphic Design" || value === "Video"
+  );
+}
 
 function getProjectMedia(project: Project): ProjectMedia[] {
   if (project.gallery?.length) return project.gallery;
@@ -65,175 +87,14 @@ function getProjectMedia(project: Project): ProjectMedia[] {
   ];
 }
 
-// Save images and videos inside public/portfolio/.
-// Update each media path to match its filename.
-// Replace placeholder entries with your completed projects.
-const projects: Project[] = [
-  {
-    id: "handi-x-branding",
-    title: "Handi-X Brand Identity",
-    category: "Branding",
-    description:
-      "A complete visual identity developed for Handi-X, covering the logo, colour system, typography, and branded applications that bring the brand to life.",
-    image: "/portfolio/handi-x-branding.jpg",
-    imageAlt: "Handi-X logo and brand identity applications",
-    background: "#e8eeeb",
-  },
-{
-  id: "fireside-chat",
-  title: "Skill. Value. Income.",
-  category: "Graphic Design",
-  description:
-    "A coordinated set of promotional flyers created for the Skill. Value. Income. fireside chat, introducing the event, speaker, and message throughout the campaign.",
-  image: "/portfolio/fireside-chat.jpg",
-  imageAlt: "Fireside chat promotional flyer",
-  background: "#eee4d8",
-
-  gallery: [
-    {
-      src: "/portfolio/fireside-chat.jpg",
-      alt: "First fireside chat flyer",
-    },
-    {
-      src: "/portfolio/Meet Our Speaker [SVI].jpg",
-      alt: "Second fireside chat flyer",
-    },
-    {
-      src: "/portfolio/Thank you FSC.jpg",
-      alt: "Third fireside chat flyer",
-    },
-  ],
-},
-  {
-    id: "campus-video",
-    title: "Campus Food-Spot Story",
-    category: "Video",
-    description:
-      "A short campus-based promotional film following a simple food-spot story, using natural conversations and everyday student moments to make the experience relatable.",
-    image: "/portfolio/campus-video.jpg",
-    imageAlt: "Campus food-spot video thumbnail",
-    background: "#dce7e9",
-    linkLabel: "Watch video",
-    // href: "https://your-video-link.com",
-  },
-  {
-    id: "MARVEL-Tech 7-days Graphic Design Training Program",
-    title: "MARVEL-Tech 7-days Graphic Design Training Program",
-    category: "Branding",
-    description:
-      "A campaign created to promote MARVEL-Tech’s seven-day graphic design training, using countdown flyers to build anticipation and keep participants engaged before the sessions began.",
-    image: "/portfolio/packaging-project.jpg",
-    imageAlt: "Packaging design project",
-    background: "#f1e5db",
-    placeholder: true,
-
-    gallery: [
-      {
-      src: "/portfolio/Training/7-days II.jpg",
-      alt: "Second fireside chat flyer",
-    },
-    {
-      src: "/portfolio/Training/1 day to go.jpg",
-      alt: "Second fireside chat flyer",
-    },
-     {
-      src: "/portfolio/Training/2 days to go.jpg",
-      alt: "Second fireside chat flyer",
-    },
-     {
-      src: "/portfolio/Training/3 days to go.jpg",
-      alt: "Second fireside chat flyer",
-    },
-    ],
-  },
-  {
-    id: "Social Media Designs",
-    title: "Social Media Designs",
-    category: "Graphic Design",
-    description:
-      "A collection of social media graphics created for different businesses, events, and campaigns, each designed to communicate its message clearly and attract attention online.",
-    image: "/portfolio/social-media-designs.jpg",
-    imageAlt: "Social media design examples",
-    imagePosition: "top",
-    background: "#e5e5ef",
-    placeholder: true,
-    linkLabel: "See Details",
-
-     gallery: [
-     {
-      src: "/portfolio/social media/Delight Crunchy and More!.jpg",
-      alt: "Second fireside chat flyer",
-    },
-    {
-      src: "/portfolio/social media/World OF LIGHT II.jpg",
-      alt: "First fireside chat flyer",
-    },
-   
-    {
-      src: "/portfolio/social media/August New month.jpg",
-      alt: "Third fireside chat flyer",
-    },
-    {
-      src: "/portfolio/social media/Havilah's Food Store II.jpg",
-      alt: "Third fireside chat flyer",
-    },
-    {
-      src: "/portfolio/social media/BobbyTechHub.jpg",
-      alt: "Third fireside chat flyer",
-    },
-    {
-      src: "/portfolio/social media/Julia Crunch.jpg",
-      alt: "Third fireside chat flyer",
-    },
-  ],
-  },
-  {
-    id: "social-campaign",
-    title: "WIN Conference",
-    category: "Graphic Design",
-    description:
-      "A complete promotional campaign for the WIN Conference, including event announcements, webinar publicity, and speaker-focused designs that kept the audience informed.",
-    image: "/portfolio/WIN Conference.jpg",
-    imageAlt: "Social media campaign designs",
-    background: "#e7ebdc",
-    placeholder: true,
-
-    gallery: [
-    {
-      src: "/portfolio/WIN Conference.jpg",
-      alt: "First fireside chat flyer",
-    },
-    {
-      src: "/portfolio/WIN CONFERENCE WEBINAR..jpg",
-      alt: "Second fireside chat flyer",
-    },
-    {
-      src: "/portfolio/WIN-CONFERENCE - MEET OUR SPEAKER.jpg",
-      alt: "Third fireside chat flyer",
-    },
-  ],
-  },
-  {
-    id: "product-video",
-    title: "Product Video",
-    category: "Video",
-    description:
-      "A short product-focused video designed to present the product clearly, highlight its value, and create a more engaging visual experience for potential customers.",
-    image: "/portfolio/snaptik_7677898402746649864_v3.mp4",
-    imageAlt: "Product video",
-    background: "#e4eaf0",
-    placeholder: true,
-    mediaType: "video",
-    linkLabel: "Watch video",
-  },
-];
-
 function ProjectImage({
   project,
   onOpen,
+  frameClassName,
 }: {
   project: Project;
   onOpen: () => void;
+  frameClassName?: string;
 }) {
   const [failed, setFailed] = useState(false);
   const mediaItems = getProjectMedia(project);
@@ -244,24 +105,22 @@ function ProjectImage({
   const frame = (
     <div
       style={{ backgroundColor: project.background }}
-      className="relative aspect-[5/3] w-full overflow-hidden rounded-[1.25rem]"
+      className={`relative w-full overflow-hidden rounded-[0.75rem] border border-[#0b1020]/10 ${frameClassName ?? "aspect-[1.28/1]"}`}
     >
       {failed || !thumbnail?.src ? (
         <div
           role="img"
-          aria-label={project.title + ": preview unavailable"}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-center text-[#0b1020]/55"
+          aria-label={`${project.title}: preview unavailable`}
+          className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-3 text-center text-[#0b1020]/45"
         >
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/65">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70">
             <ImageIcon
               aria-hidden="true"
+              className="h-4 w-4"
               strokeWidth={1.35}
-              className="h-5 w-5"
             />
           </span>
-          <span className="font-poppins text-[11px] leading-4">
-            {project.placeholder ? "Project preview" : "Preview unavailable"}
-          </span>
+          <span className="font-poppins text-[10px]">Preview unavailable</span>
         </div>
       ) : isVideo ? (
         <video
@@ -271,52 +130,42 @@ function ProjectImage({
           preload="metadata"
           aria-label={thumbnail.alt}
           onError={() => setFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover/media:scale-[1.02]"
         />
       ) : (
-        <Image
+        <img
           src={thumbnail.src}
           alt={thumbnail.alt}
-          fill
-          sizes="(max-width: 639px) calc((100vw - 84px) / 2), (max-width: 1023px) calc((100vw - 100px) / 2), (max-width: 1279px) calc((100vw - 180px) / 4), 260px"
+          loading="lazy"
           onError={() => setFailed(true)}
-          style={{
-            objectFit: "cover",
-            objectPosition: thumbnail.position ?? "center",
-          }}
-          className="transition duration-700 ease-out group-hover/media:scale-[1.04]"
+          style={{ objectPosition: thumbnail.position ?? "center" }}
+          className="absolute inset-0 h-full w-full object-cover transition duration-700 ease-out group-hover/media:scale-[1.025]"
         />
       )}
 
-      {!isVideo && (
-        <div className="pointer-events-none absolute inset-0 bg-[#0b1020]/0 transition-colors duration-300 group-hover/media:bg-[#0b1020]/35" />
-      )}
-
-      {(project.placeholder || project.concept) && (
-        <span className="font-poppins absolute left-3 top-3 z-10 rounded-full border border-white/50 bg-white/85 px-2.5 py-1 text-[9px] font-medium leading-3 text-[#0b1020]/75 backdrop-blur-sm">
-          {project.placeholder ? "Sample project" : "Concept"}
-        </span>
+      {canOpen && (
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0b1020]/55 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover/media:opacity-100" />
       )}
 
       {mediaItems.length > 1 && canOpen && (
-        <span className="font-poppins pointer-events-none absolute right-3 top-3 z-10 rounded-full border border-white/50 bg-white/85 px-2.5 py-1 text-[9px] font-medium leading-3 text-[#0b1020]/75 backdrop-blur-sm">
+        <span className="font-poppins pointer-events-none absolute right-2 top-2 rounded-full border border-white/60 bg-white/90 px-2 py-1 text-[8px] font-medium text-[#0b1020]/75 backdrop-blur-sm">
           {mediaItems.length} items
         </span>
       )}
 
-      {!isVideo && canOpen && (
-        <span className="font-poppins pointer-events-none absolute bottom-3 left-3 inline-flex translate-y-2 items-center gap-2 rounded-full bg-white px-3 py-2 text-[10px] font-medium text-[#0b1020] opacity-0 shadow-lg transition duration-300 group-hover/media:translate-y-0 group-hover/media:opacity-100">
-          View project
-          <Maximize2 aria-hidden="true" className="h-3 w-3" />
+      {project.category === "Video" && canOpen && !isVideo && (
+        <span className="pointer-events-none absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full border border-white/60 bg-white/90 text-[#0b1020] shadow-sm">
+          <Play
+            aria-hidden="true"
+            className="ml-0.5 h-3 w-3 fill-current"
+          />
         </span>
       )}
 
-      {project.category === "Video" && canOpen && !isVideo && (
-        <span className="pointer-events-none absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-white/90 text-[#0b1020] shadow-sm">
-          <Play
-            aria-hidden="true"
-            className="ml-0.5 h-4 w-4 fill-current"
-          />
+      {!isVideo && canOpen && (
+        <span className="font-poppins pointer-events-none absolute bottom-2 left-2 inline-flex translate-y-1 items-center gap-1.5 rounded-full bg-white px-2.5 py-1.5 text-[9px] font-medium text-[#0b1020] opacity-0 shadow-lg transition duration-300 group-hover/media:translate-y-0 group-hover/media:opacity-100">
+          Open case study
+          <Maximize2 aria-hidden="true" className="h-3 w-3" />
         </span>
       )}
     </div>
@@ -331,8 +180,8 @@ function ProjectImage({
       type="button"
       onClick={onOpen}
       disabled={!canOpen}
-      aria-label={"View " + project.title + " image full screen"}
-      className="group/media block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-4 focus-visible:ring-offset-white disabled:cursor-default"
+      aria-label={`View ${project.title} image full screen`}
+      className="group/media block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f9f9f9] disabled:cursor-default"
     >
       {frame}
     </button>
@@ -360,6 +209,8 @@ function ProjectLightbox({
   const mediaItems = getProjectMedia(project);
   const currentMedia = mediaItems[mediaIndex] ?? mediaItems[0];
   const currentIsVideo = currentMedia?.type === "video";
+  const projectNumber = String(projectIndex + 1).padStart(2, "0");
+  const projectTotal = String(projectCount).padStart(2, "0");
 
   useEffect(() => {
     setMediaIndex(0);
@@ -383,21 +234,21 @@ function ProjectLightbox({
 
       event.preventDefault();
 
-      if (mediaItems.length > 1) {
-        const direction = event.key === "ArrowLeft" ? -1 : 1;
+      const direction = event.key === "ArrowLeft" ? -1 : 1;
 
-        setMediaIndex((currentIndex) =>
-          (currentIndex + direction + mediaItems.length) % mediaItems.length,
+      if (event.shiftKey && mediaItems.length > 1) {
+        setMediaIndex(
+          (currentIndex) =>
+            (currentIndex + direction + mediaItems.length) % mediaItems.length,
         );
         return;
       }
 
-      if (event.key === "ArrowLeft") onPrevious();
-      if (event.key === "ArrowRight") onNext();
+      if (direction < 0) onPrevious();
+      if (direction > 0) onNext();
     };
 
     document.addEventListener("keydown", handleKeyDown);
-
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [mediaItems.length, onClose, onNext, onPrevious]);
 
@@ -421,159 +272,248 @@ function ProjectLightbox({
       aria-modal="true"
       aria-labelledby="portfolio-lightbox-title"
       aria-describedby="portfolio-lightbox-description"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b1020]/85 p-3 backdrop-blur-sm sm:p-6 lg:p-10"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#07101d]/90 px-3 py-4 backdrop-blur-md sm:px-6 sm:py-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 18, scale: 0.98 }}
+        initial={{ opacity: 0, y: 16, scale: 0.985 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 18, scale: 0.98 }}
-        transition={{ duration: 0.24 }}
-        className="relative grid max-h-[92vh] w-full max-w-6xl grid-cols-1 overflow-hidden rounded-[1.5rem] bg-[#f9f9f9] shadow-2xl lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)] lg:rounded-[2rem]"
+        exit={{ opacity: 0, y: 16, scale: 0.985 }}
+        transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+        className="relative grid max-h-[84vh] w-full max-w-5xl overflow-hidden rounded-[1.25rem] border border-white/15 bg-[#f9f9f9] shadow-[0_28px_100px_rgba(0,0,0,0.42)] lg:grid-cols-[minmax(0,1.45fr)_minmax(270px,0.65fr)]"
       >
-        <div className="relative flex min-h-[42vh] items-center justify-center bg-[#e8eeeb] sm:min-h-[52vh] lg:min-h-[min(78vh,720px)]">
-          {mediaFailed || !currentMedia?.src ? (
-            <div className="flex flex-col items-center justify-center gap-3 text-center text-[#0b1020]/55">
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/65">
-                <ImageIcon
-                  aria-hidden="true"
-                  strokeWidth={1.35}
-                  className="h-6 w-6"
-                />
-              </span>
-              <p className="font-poppins text-xs">Project preview</p>
-            </div>
-          ) : currentIsVideo ? (
-            <video
-              src={currentMedia.src}
-              controls
-              playsInline
-              preload="metadata"
-              aria-label={currentMedia.alt}
-              onError={() => setMediaFailed(true)}
-              className="max-h-full max-w-full object-contain p-4 sm:p-8 lg:p-12"
-            />
-          ) : (
-            <Image
-              src={currentMedia.src}
-              alt={currentMedia.alt}
-              fill
-              sizes="(max-width: 1023px) 100vw, 65vw"
-              onError={() => setMediaFailed(true)}
-              style={{
-                objectFit: "contain",
-                objectPosition: currentMedia.position ?? "center",
-              }}
-              className="object-contain p-4 sm:p-8 lg:p-12"
-            />
-          )}
-
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#0b1020]/15 to-transparent lg:hidden" />
-
-          {mediaItems.length > 1 && (
-            <div className="absolute left-3 top-3 z-20 flex items-center gap-1 rounded-full border border-white/60 bg-white/90 p-1 text-[#0b1020] shadow-sm sm:left-5 sm:top-5">
-              <button
-                type="button"
-                onClick={() => moveMedia(-1)}
-                aria-label="View previous item in this project"
-                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#0b1020]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5]"
-              >
-                <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-              </button>
-              <span className="font-poppins min-w-14 px-1 text-center text-[10px] font-semibold tabular-nums">
-                {String(mediaIndex + 1).padStart(2, "0")} / {String(mediaItems.length).padStart(2, "0")}
-              </span>
-              <button
-                type="button"
-                onClick={() => moveMedia(1)}
-                aria-label="View next item in this project"
-                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-[#0b1020]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5]"
-              >
-                <ArrowRight aria-hidden="true" className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-
-          <div className="absolute bottom-3 left-3 flex items-center gap-2 sm:bottom-5 sm:left-5">
-            <button
-              type="button"
-              onClick={onPrevious}
-              disabled={projectCount < 2}
-              aria-label="View previous project"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/90 text-[#0b1020] shadow-sm transition hover:scale-105 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5]"
-            >
-              <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={onNext}
-              disabled={projectCount < 2}
-              aria-label="View next project"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/70 bg-white/90 text-[#0b1020] shadow-sm transition hover:scale-105 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5]"
-            >
-              <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-
-        <div className="flex min-h-0 flex-col justify-between border-t border-[#0b1020]/10 bg-[#f9f9f9] px-5 py-6 sm:px-8 sm:py-8 lg:border-l lg:border-t-0 lg:px-10 lg:py-12">
-          <div>
-            <div className="flex items-center justify-between gap-4">
-              <p className="font-poppins text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0b1020]/55">
-                {project.category}
-              </p>
-              <p className="font-poppins text-[10px] tabular-nums text-[#0b1020]/45">
-                {String(projectIndex + 1).padStart(2, "0")} / {String(projectCount).padStart(2, "0")}
-              </p>
-            </div>
-
-            <h3
-              id="portfolio-lightbox-title"
-              className="font-sora mt-4 max-w-md text-2xl font-semibold leading-[1.06] tracking-[-0.045em] text-[#0b1020] sm:text-3xl"
-            >
-              {project.title}
-            </h3>
-
-            <p
-              id="portfolio-lightbox-description"
-              className="font-poppins mt-5 max-w-md text-sm leading-7 text-[#0b1020]/65"
-            >
-              {project.description}
-            </p>
-          </div>
-
-          <div className="mt-8 border-t border-[#0b1020]/10 pt-5">
-            {project.href ? (
-              <a
-                href={project.href}
-                target={isExternal ? "_blank" : undefined}
-                rel={isExternal ? "noopener noreferrer" : undefined}
-                className="font-poppins inline-flex min-h-11 items-center gap-2 rounded-full bg-[#0b1020] px-4 py-2.5 text-xs font-medium text-white transition hover:bg-[#05cde5] hover:text-[#0b1020] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2"
-              >
-                {project.linkLabel ?? "View project"}
-                <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
-                {isExternal && (
-                  <span className="sr-only"> (opens in a new tab)</span>
-                )}
-              </a>
+        <div
+          className="relative flex h-[40vh] min-h-[16rem] items-center justify-center overflow-hidden sm:h-[48vh] lg:h-auto lg:min-h-[min(62vh,560px)]"
+          style={{ backgroundColor: project.background }}
+        >
+          <div className="relative z-10 flex h-full w-full items-center justify-center overflow-auto overscroll-contain">
+            {mediaFailed || !currentMedia?.src ? (
+              <div className="flex flex-col items-center justify-center gap-3 text-center text-[#0b1020]/50">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70">
+                  <ImageIcon
+                    aria-hidden="true"
+                    className="h-5 w-5"
+                    strokeWidth={1.35}
+                  />
+                </span>
+                <p className="font-poppins text-xs">
+                  Project preview unavailable
+                </p>
+              </div>
+            ) : currentIsVideo ? (
+              <video
+                src={currentMedia.src}
+                controls
+                playsInline
+                preload="metadata"
+                aria-label={currentMedia.alt}
+                onError={() => setMediaFailed(true)}
+                className="block h-auto w-auto max-h-[calc(40vh-2.5rem)] max-w-[calc(100%_-_2rem)] object-contain sm:max-h-[calc(48vh-3rem)] sm:max-w-[calc(100%_-_3rem)] lg:max-h-[calc(62vh-3.5rem)] lg:max-w-[calc(100%_-_3rem)]"
+              />
             ) : (
-              <p className="font-poppins text-xs leading-5 text-[#0b1020]/50">
-                A closer look at selected Handi-X work.
-              </p>
+              <img
+                src={currentMedia.src}
+                alt={currentMedia.alt}
+                onError={() => setMediaFailed(true)}
+                style={{ objectPosition: currentMedia.position ?? "center" }}
+                className="block h-auto w-auto max-h-[calc(40vh-2.5rem)] max-w-[calc(100%_-_2rem)] object-contain sm:max-h-[calc(48vh-3rem)] sm:max-w-[calc(100%_-_3rem)] lg:max-h-[calc(62vh-3.5rem)] lg:max-w-[calc(100%_-_3rem)]"
+              />
             )}
           </div>
+
+          <div className="pointer-events-none absolute left-4 top-4 z-20 flex items-center gap-2 text-[#0b1020] sm:left-5 sm:top-5">
+            <span className="font-poppins text-[9px] font-semibold uppercase tracking-[0.18em]">
+              Work {projectNumber}
+            </span>
+            <span className="h-px w-6 bg-[#05cde5]" />
+            <span className="font-poppins text-[9px] uppercase tracking-[0.14em] text-[#0b1020]/50">
+              {projectTotal} selected
+            </span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onPrevious}
+            disabled={projectCount < 2}
+            aria-label="View previous project"
+            className="group absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#0b1020]/10 bg-[#f9f9f9]/80 text-[#0b1020] shadow-[0_6px_18px_rgba(11,16,32,0.12)] backdrop-blur-sm transition duration-200 hover:border-[#05cde5] hover:bg-[#0b1020] hover:text-white disabled:pointer-events-none disabled:opacity-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:left-4"
+          >
+            <ArrowLeft
+              aria-hidden="true"
+              className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-x-0.5"
+            />
+          </button>
+
+          <button
+            type="button"
+            onClick={onNext}
+            disabled={projectCount < 2}
+            aria-label="View next project"
+            className="group absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#0b1020]/10 bg-[#f9f9f9]/80 text-[#0b1020] shadow-[0_6px_18px_rgba(11,16,32,0.12)] backdrop-blur-sm transition duration-200 hover:border-[#05cde5] hover:bg-[#0b1020] hover:text-white disabled:pointer-events-none disabled:opacity-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:right-4"
+          >
+            <ArrowRight
+              aria-hidden="true"
+              className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+            />
+          </button>
+
+          {mediaItems.length > 1 && (
+            <div
+              role="group"
+              aria-label="Select project media"
+              className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-end sm:inset-x-5 sm:bottom-5"
+            >
+              <div className="flex max-w-[78%] items-center gap-1.5 overflow-x-auto rounded-[0.85rem] border border-[#0b1020]/10 bg-[#f9f9f9]/88 p-1.5 shadow-[0_8px_24px_rgba(11,16,32,0.16)] backdrop-blur-sm">
+                {mediaItems.map((media, index) => {
+                  const active = index === mediaIndex;
+
+                  return (
+                    <button
+                      key={`${media.src}-${index}`}
+                      type="button"
+                      onClick={() => setMediaIndex(index)}
+                      aria-label={`View media ${index + 1} of ${mediaItems.length}`}
+                      aria-current={active ? "true" : undefined}
+                      className={`group relative h-9 w-12 shrink-0 overflow-hidden rounded-[0.55rem] border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] ${active ? "border-[#05cde5] opacity-100 ring-1 ring-[#05cde5]" : "border-transparent opacity-60 hover:opacity-100"}`}
+                    >
+                      {media.type === "video" ? (
+                        <video
+                          src={media.src}
+                          muted
+                          playsInline
+                          preload="metadata"
+                          aria-hidden="true"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <img
+                          src={media.src}
+                          alt=""
+                          aria-hidden="true"
+                          className="h-full w-full object-cover"
+                        />
+                      )}
+                      {media.type === "video" && (
+                        <span className="absolute inset-0 flex items-center justify-center bg-[#0b1020]/20 text-white">
+                          <Play
+                            aria-hidden="true"
+                            className="h-3 w-3 fill-current"
+                          />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
+
+        <aside className="flex max-h-[36vh] min-h-0 flex-col justify-between overflow-y-auto border-t border-[#0b1020]/10 bg-[#f9f9f9] px-5 py-5 sm:px-7 sm:py-6 lg:max-h-none lg:border-l lg:border-t-0 lg:px-8 lg:py-8">
+          <div>
+            <div className="flex items-center justify-between gap-4">
+              <p className="font-poppins text-[9px] font-semibold uppercase tracking-[0.18em] text-[#0b1020]/50">
+                Selected project
+              </p>
+              <span className="font-poppins text-[9px] uppercase tracking-[0.14em] text-[#0b1020]/35">
+                {project.category}
+              </span>
+            </div>
+
+            <div className="mt-6">
+              <p className="font-poppins text-[9px] font-semibold uppercase tracking-[0.18em] text-[#0b1020]/35">
+                Case study / {projectNumber}
+              </p>
+              <h3
+                id="portfolio-lightbox-title"
+                className="font-sora mt-3 max-w-md text-[clamp(1.5rem,2.5vw,2.35rem)] font-semibold leading-[0.98] tracking-[-0.065em] text-[#0b1020]"
+              >
+                {project.title}
+              </h3>
+              <div className="mt-5 h-px w-12 bg-[#05cde5]" />
+              <p
+                id="portfolio-lightbox-description"
+                className="font-poppins mt-4 max-w-md text-[12px] leading-5 text-[#0b1020]/65 sm:text-[13px] sm:leading-6"
+              >
+                {project.description}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-[#0b1020]/10 pt-4">
+            <div className="flex items-center justify-between gap-4">
+              {project.href ? (
+                <a
+                  href={project.href}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  className="font-poppins inline-flex items-center gap-2 border-b border-[#0b1020]/35 pb-1.5 text-[11px] font-semibold text-[#0b1020] transition hover:border-[#05cde5] hover:text-[#05aeca] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-4"
+                >
+                  {project.linkLabel ?? "View project"}
+                  <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
+                  {isExternal && (
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  )}
+                </a>
+              ) : (
+                <p className="font-poppins text-[11px] leading-5 text-[#0b1020]/45">
+                  A closer look at selected Handi-X work.
+                </p>
+              )}
+              <span className="font-poppins text-[9px] uppercase tracking-[0.14em] text-[#0b1020]/35">
+                {projectNumber} / {projectTotal}
+              </span>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-2 border-t border-[#0b1020]/10 pt-3">
+              <button
+                type="button"
+                onClick={onPrevious}
+                disabled={projectCount < 2}
+                className="group flex items-center gap-2 border border-[#0b1020]/10 px-3 py-2 text-left font-poppins text-[10px] font-semibold uppercase tracking-[0.12em] text-[#0b1020]/65 transition hover:border-[#05cde5] hover:text-[#0b1020] disabled:pointer-events-none disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5]"
+              >
+                <ArrowLeft
+                  aria-hidden="true"
+                  className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5"
+                />
+                Previous
+              </button>
+              <button
+                type="button"
+                onClick={onNext}
+                disabled={projectCount < 2}
+                className="group flex items-center justify-end gap-2 border border-[#0b1020]/10 px-3 py-2 text-right font-poppins text-[10px] font-semibold uppercase tracking-[0.12em] text-[#0b1020]/65 transition hover:border-[#05cde5] hover:text-[#0b1020] disabled:pointer-events-none disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5]"
+              >
+                Next
+                <ArrowRight
+                  aria-hidden="true"
+                  className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5"
+                />
+              </button>
+            </div>
+
+            <p className="font-poppins mt-3 text-[9px] leading-5 text-[#0b1020]/35">
+              Shift + ← → browses this project&apos;s media
+            </p>
+          </div>
+        </aside>
 
         <button
           ref={closeButtonRef}
           type="button"
           onClick={onClose}
           aria-label="Close project preview"
-          className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 text-[#0b1020] shadow-sm transition hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2 sm:right-5 sm:top-5"
+          className="group absolute right-3 top-3 z-30 inline-flex h-8 items-center gap-2 rounded-full border border-[#0b1020]/10 bg-[#f9f9f9]/90 px-2.5 text-[#0b1020] shadow-sm backdrop-blur-sm transition hover:border-[#05cde5] hover:bg-[#0b1020] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:right-4 sm:top-4"
         >
-          <X aria-hidden="true" className="h-4 w-4" />
+          <span className="font-poppins hidden text-[9px] font-semibold uppercase tracking-[0.12em] sm:inline">
+            Close
+          </span>
+          <X
+            aria-hidden="true"
+            className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-90"
+          />
         </button>
       </motion.div>
     </motion.div>
@@ -581,9 +521,136 @@ function ProjectLightbox({
 }
 
 export default function Portfolio() {
+  const reduceMotion = useReducedMotion();
+  const [projects, setProjects] = useState<Project[]>([]);
   const [activeCategory, setActiveCategory] = useState<Category>("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const reduceMotion = useReducedMotion();
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProjects() {
+      setLoading(true);
+      setErrorMessage("");
+
+      try {
+        const supabase = createClient();
+
+        const { data: projectData, error: projectError } = await supabase
+          .from("portfolio_projects")
+          .select(
+            "id, title, category, description, cover_path, href, link_label, published, sort_order, created_at",
+          )
+          .eq("published", true)
+          .order("sort_order", { ascending: true })
+          .order("created_at", { ascending: false });
+
+        if (projectError) throw projectError;
+
+        const projectRows = (projectData ?? []) as ProjectRow[];
+        const projectIds = projectRows.map((project) => project.id);
+
+        let mediaRows: MediaRow[] = [];
+
+        if (projectIds.length > 0) {
+          const { data: mediaData, error: mediaError } = await supabase
+            .from("portfolio_media")
+            .select(
+              "project_id, file_path, media_type, alt_text, position, sort_order",
+            )
+            .in("project_id", projectIds)
+            .order("sort_order", { ascending: true });
+
+          if (mediaError) throw mediaError;
+          mediaRows = (mediaData ?? []) as MediaRow[];
+        }
+
+        const mediaByProject = new Map<string, MediaRow[]>();
+
+        for (const media of mediaRows) {
+          const existing = mediaByProject.get(media.project_id) ?? [];
+          existing.push(media);
+          mediaByProject.set(media.project_id, existing);
+        }
+
+        const publicUrl = (path: string) =>
+          supabase.storage.from("portfolio-media").getPublicUrl(path).data
+            .publicUrl;
+
+        const mappedProjects: Project[] = projectRows
+          .filter((project) => isProjectCategory(project.category))
+          .map((project) => {
+            const additionalMedia = (mediaByProject.get(project.id) ?? []).map(
+              (media) => ({
+                src: publicUrl(media.file_path),
+                alt: media.alt_text || project.title,
+                type: media.media_type,
+                position: media.position ?? undefined,
+              }),
+            );
+
+            const coverMedia = project.cover_path
+              ? [
+                  {
+                    src: publicUrl(project.cover_path),
+                    alt: project.title,
+                    type: "image" as const,
+                  },
+                ]
+              : [];
+
+            const allMedia = [...coverMedia, ...additionalMedia].filter(
+              (media, index, collection) =>
+                media.src &&
+                collection.findIndex((item) => item.src === media.src) ===
+                  index,
+            );
+
+            const primaryMedia = allMedia[0];
+            const category = project.category as ProjectCategory;
+
+            return {
+              id: project.id,
+              title: project.title,
+              category,
+              description: project.description,
+              image: primaryMedia?.src ?? "",
+              imageAlt: primaryMedia?.alt ?? project.title,
+              imagePosition: primaryMedia?.position,
+              background: categoryBackgrounds[category],
+              href: project.href || undefined,
+              linkLabel: project.link_label || undefined,
+              mediaType: primaryMedia?.type,
+              gallery: allMedia.length > 1 ? allMedia : undefined,
+            };
+          });
+
+        if (!cancelled) {
+          setProjects(mappedProjects);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setErrorMessage(
+            error instanceof Error
+              ? error.message
+              : "We could not load the portfolio right now.",
+          );
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadProjects();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!selectedProject) return;
@@ -601,203 +668,336 @@ export default function Portfolio() {
       ? projects
       : projects.filter((project) => project.category === activeCategory);
 
+  const visibleProjects = filteredProjects;
+
+  useEffect(() => {
+    setCarouselIndex(0);
+
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }, [activeCategory, projects.length]);
+
   const selectedIndex = selectedProject
-    ? filteredProjects.findIndex((project) => project.id === selectedProject.id)
+    ? visibleProjects.findIndex((project) => project.id === selectedProject.id)
     : -1;
 
-  function moveProject(direction: number) {
-    if (!selectedProject || filteredProjects.length < 2) return;
+  useEffect(() => {
+    if (selectedProject && selectedIndex < 0) {
+      setSelectedProject(null);
+    }
+  }, [selectedIndex, selectedProject]);
 
-    const currentIndex = filteredProjects.findIndex(
+  function moveProject(direction: number) {
+    if (!selectedProject || visibleProjects.length < 2) return;
+
+    const currentIndex = visibleProjects.findIndex(
       (project) => project.id === selectedProject.id,
     );
-    const nextIndex =
-      (currentIndex + direction + filteredProjects.length) %
-      filteredProjects.length;
 
-    setSelectedProject(filteredProjects[nextIndex]);
+    const nextIndex =
+      (currentIndex + direction + visibleProjects.length) %
+      visibleProjects.length;
+
+    setSelectedProject(visibleProjects[nextIndex]);
+  }
+
+  function handleCarouselScroll() {
+    const carousel = carouselRef.current;
+    const firstCard = carousel?.querySelector<HTMLElement>(
+      "[data-portfolio-card]",
+    );
+
+    if (!carousel || !firstCard) return;
+
+    const cardStep = firstCard.offsetWidth + 20;
+    const nextIndex = Math.round(carousel.scrollLeft / cardStep);
+
+    setCarouselIndex(
+      Math.max(0, Math.min(nextIndex, visibleProjects.length - 1)),
+    );
   }
 
   return (
     <section
       id="portfolio"
       aria-labelledby="portfolio-heading"
-      className="relative scroll-mt-24 overflow-hidden bg-[#f9f9f9] py-16 sm:py-24 lg:py-28"
+      className="relative overflow-hidden bg-[#f9f9f9] py-12 sm:py-14 lg:py-16"
     >
-      <div className="pointer-events-none absolute -right-24 top-24 h-72 w-72 rounded-full bg-[#05cde5]/10 blur-3xl" />
-      <div className="pointer-events-none absolute -left-32 bottom-10 h-80 w-80 rounded-full bg-[#0b1020]/5 blur-3xl" />
-
-      <div className="relative mx-auto w-full max-w-[1240px] px-5 sm:px-8 lg:px-10">
+      <div className="mx-auto w-full max-w-[1240px] px-5 sm:px-8 lg:px-10">
         <motion.header
-          initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.5 }}
-          className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.48fr)] lg:items-end lg:gap-16"
+          className="border-t border-[#0b1020]/15 pt-4 sm:pt-5"
         >
-          <div className="max-w-3xl">
-            <p className="font-poppins inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#0b1020]/55 sm:text-[11px]">
-              <span className="h-px w-7 bg-[#05cde5]" />
-              Selected work
-            </p>
+          <div className="grid gap-7 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-16">
+            <div>
+              <div className="flex items-center justify-between border-b border-[#0b1020]/15 pb-3 lg:max-w-xl">
+                <p className="font-poppins text-[10px] font-semibold uppercase tracking-[0.2em] text-[#0b1020]/55">
+                  Selected work
+                </p>
+                <span className="font-poppins text-[10px] tabular-nums text-[#0b1020]/40">
+                  02 / Work
+                </span>
+              </div>
 
-            <h2
-              id="portfolio-heading"
-              className="font-sora mt-5 max-w-3xl text-[clamp(2.35rem,6vw,5.25rem)] font-semibold leading-[0.98] tracking-[-0.065em] text-[#0b1020]"
-            >
-              Work that gives brands something to be remembered by.
-            </h2>
-          </div>
+              <h2
+                id="portfolio-heading"
+                className="font-sora mt-4 max-w-2xl text-[clamp(2rem,4vw,3.6rem)] font-semibold leading-[0.97] tracking-[-0.075em] text-[#0b1020]"
+              >
+                Crafted with a point of view.
+              </h2>
+            </div>
 
-          <div className="border-l-2 border-[#05cde5] pl-5 lg:mb-1">
-            <p className="font-poppins max-w-sm text-sm leading-7 text-[#0b1020]/65 sm:text-[15px]">
-              Brand identities, digital experiences, campaign designs and video
-              stories—built with intention and made to move people.
-            </p>
+            <div className="lg:pb-1">
+              <p className="font-poppins max-w-md text-[12px] leading-5 text-[#0b1020]/60 sm:text-[13px] sm:leading-6">
+                A considered selection of identities, campaigns, and digital
+                experiences built to make the right impression.
+              </p>
+
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-[#0b1020]/15 pt-3.5">
+                <p className="font-poppins mr-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#0b1020]/45">
+                  Browse by discipline
+                </p>
+
+                <div
+                  role="group"
+                  aria-label="Filter projects by category"
+                  className="flex flex-wrap gap-x-4 gap-y-2"
+                >
+                  {categories.map((category) => {
+                    const isActive = activeCategory === category;
+
+                    return (
+                      <button
+                        key={category}
+                        type="button"
+                        aria-pressed={isActive}
+                        aria-controls="portfolio-projects"
+                        onClick={() => setActiveCategory(category)}
+                        className={
+                          "font-poppins relative pb-1 text-[11px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2 " +
+                          (isActive
+                            ? "text-[#0b1020] after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:bg-[#05cde5]"
+                            : "text-[#0b1020]/45 hover:text-[#0b1020]")
+                        }
+                      >
+                        {category}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
         </motion.header>
 
-        <div className="mt-12 flex flex-col gap-4 border-y border-[#0b1020]/10 py-4 sm:mt-16 sm:flex-row sm:items-center sm:justify-between">
-          <div
-            role="group"
-            aria-label="Filter projects by category"
-            className="flex flex-wrap gap-2"
-          >
-            {categories.map((category) => {
-              const isActive = activeCategory === category;
-
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  aria-pressed={isActive}
-                  aria-controls="portfolio-projects"
-                  onClick={() => setActiveCategory(category)}
-                  className={"font-poppins inline-flex min-h-10 items-center justify-center rounded-full border px-3.5 py-2 text-[10px] font-medium transition duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2 sm:px-4 sm:text-xs " + (isActive
-                    ? "border-[#0b1020] bg-[#0b1020] text-white"
-                    : "border-[#0b1020]/15 bg-transparent text-[#0b1020]/65 hover:border-[#0b1020]/45 hover:text-[#0b1020]")}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-
-          <p className="font-poppins text-[10px] font-medium uppercase tracking-[0.14em] text-[#0b1020]/45 sm:shrink-0 sm:text-right">
-            {String(filteredProjects.length).padStart(2, "0")}{" "}
-            {filteredProjects.length === 1 ? "project" : "projects"}
-          </p>
-        </div>
-
         <p role="status" className="sr-only">
-          Showing {filteredProjects.length}{" "}
-          {filteredProjects.length === 1 ? "project" : "projects"}
-          {activeCategory !== "All" ? " in " + activeCategory : ""}.
+          Showing {visibleProjects.length} of {filteredProjects.length}{" "}
+          {filteredProjects.length === 1 ? "project" : "projects"}.
         </p>
 
-        <motion.div
-          id="portfolio-projects"
-          layout
-          className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-4 lg:grid-cols-4 lg:gap-5"
-        >
-          <AnimatePresence initial={false} mode="popLayout">
-            {filteredProjects.map((project, index) => {
-              const isExternal = /^https?:\/\//i.test(project.href ?? "");
-
-              return (
-                <motion.article
-                  key={project.id}
-                  layout
-                  initial={{ opacity: 0, y: reduceMotion ? 0 : 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.97 }}
-                  transition={{ duration: reduceMotion ? 0 : 0.35 }}
-                  className="group flex h-[300px] min-w-0 flex-col overflow-hidden rounded-[1rem] border border-[#0b1020]/10 bg-white p-2 shadow-[0_6px_22px_rgba(11,16,32,0.04)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(11,16,32,0.1)] sm:h-[370px] sm:rounded-[1.15rem] sm:p-2.5 lg:h-[360px]"
-                >
-                  <ProjectImage
-                    project={project}
-                    onOpen={() => setSelectedProject(project)}
-                  />
-
-                  <div className="flex min-h-0 flex-1 flex-col px-1 pb-1 pt-3 sm:px-1.5 sm:pb-2 sm:pt-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-poppins text-[8px] font-semibold uppercase tracking-[0.12em] text-[#0b1020]/50 sm:text-[9px]">
-                        {project.category}
-                      </p>
-                      <span className="font-poppins text-[9px] tabular-nums text-[#0b1020]/35">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-
-                    <h3
-                      style={{
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 2,
-                        overflow: "hidden",
-                      }}
-                      className="font-sora mt-1.5 min-h-[2.25rem] break-words text-sm font-semibold leading-tight tracking-[-0.03em] text-[#0b1020] sm:min-h-[2.5rem] sm:text-base"
-                    >
-                      {project.title}
-                    </h3>
-
-                    <p
-                      style={{
-                        display: "-webkit-box",
-                        WebkitBoxOrient: "vertical",
-                        WebkitLineClamp: 2,
-                        overflow: "hidden",
-                      }}
-                      className="font-poppins mt-1.5 min-h-[2.5rem] break-words text-[10px] leading-5 text-[#0b1020]/60 sm:text-xs sm:leading-5"
-                    >
-                      {project.description}
-                    </p>
-
-                    <div className="mt-auto border-t border-[#0b1020]/10 pt-2 sm:pt-2.5">
-                      {project.href ? (
-                        <a
-                          href={project.href}
-                          target={isExternal ? "_blank" : undefined}
-                          rel={isExternal ? "noopener noreferrer" : undefined}
-                          className="font-poppins inline-flex min-h-10 items-center gap-1.5 text-[11px] font-medium text-[#0b1020] transition-colors hover:text-[#05a9bd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2 sm:text-xs"
-                        >
-                          {project.linkLabel ?? "View project"}
-                          <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
-                          {isExternal && (
-                            <span className="sr-only"> (opens in a new tab)</span>
-                          )}
-                        </a>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => setSelectedProject(project)}
-                          className="font-poppins inline-flex min-h-10 items-center gap-1.5 text-[11px] font-medium text-[#0b1020] transition-colors hover:text-[#05a9bd] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2 sm:text-xs"
-                        >
-                          {project.linkLabel ?? "See details"}
-                          <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </motion.article>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-
-      <AnimatePresence>
-        {selectedProject && selectedIndex >= 0 && (
-          <ProjectLightbox
-            project={selectedProject}
-            projectIndex={selectedIndex}
-            projectCount={filteredProjects.length}
-            onClose={() => setSelectedProject(null)}
-            onPrevious={() => moveProject(-1)}
-            onNext={() => moveProject(1)}
-          />
+        {loading && (
+          <div className="mt-8 flex gap-5 overflow-hidden">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="w-[78vw] max-w-[20rem] shrink-0 animate-pulse sm:w-[42vw] sm:max-w-[21rem] lg:w-auto lg:flex-1"
+              >
+                <div className="aspect-[1.38/1] rounded-[0.85rem] bg-[#0b1020]/[0.07]" />
+                <div className="mt-4 space-y-3">
+                  <div className="h-2.5 w-20 rounded-full bg-[#0b1020]/10" />
+                  <div className="h-6 w-3/5 rounded-full bg-[#0b1020]/10" />
+                  <div className="h-3 w-full rounded-full bg-[#0b1020]/[0.07]" />
+                </div>
+              </div>
+            ))}
+          </div>
         )}
-      </AnimatePresence>
+
+        {!loading && errorMessage && (
+          <div className="mt-8 border-t border-[#0b1020]/15 py-8 text-sm text-red-700">
+            {errorMessage}
+          </div>
+        )}
+
+        {!loading && !errorMessage && filteredProjects.length === 0 && (
+          <div className="mt-8 border-y border-dashed border-[#0b1020]/20 py-12 text-center">
+            <p className="font-sora text-lg font-semibold text-[#0b1020]">
+              No projects in this category yet.
+            </p>
+            <p className="font-poppins mx-auto mt-2 max-w-md text-sm leading-6 text-[#0b1020]/55">
+              Publish a project from the Handi-X admin dashboard and it will
+              appear here.
+            </p>
+          </div>
+        )}
+
+        {!loading &&
+          !errorMessage &&
+          filteredProjects.length > 0 && (
+            <div className="mt-8 sm:mt-10">
+              <div className="mb-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-[#0b1020]/45">
+                  <span className="font-poppins text-[10px] font-semibold uppercase tracking-[0.15em]">
+                    Swipe to explore
+                  </span>
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5 text-[#05cde5]"
+                  />
+                </div>
+
+                <div
+                  className="flex items-center gap-2"
+                  aria-hidden="true"
+                >
+                  <span className="font-poppins text-[10px] tabular-nums text-[#0b1020]/40">
+                    {String(carouselIndex + 1).padStart(2, "0")} /{" "}
+                    {String(visibleProjects.length).padStart(2, "0")}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {visibleProjects.map((project, index) => (
+                      <span
+                        key={project.id}
+                        className={
+                          "block h-1 rounded-full transition-all duration-300 " +
+                          (carouselIndex === index
+                            ? "w-5 bg-[#0b1020]"
+                            : "w-1.5 bg-[#0b1020]/20")
+                        }
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#f9f9f9] via-[#f9f9f9]/80 to-transparent sm:w-14 lg:w-20"
+                />
+
+                <div
+                  id="portfolio-projects"
+                  ref={carouselRef}
+                  onScroll={handleCarouselScroll}
+                  className="flex cursor-grab snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-3 pr-[18vw] touch-pan-x select-none active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:pr-8"
+                >
+                  {visibleProjects.map((project, index) => {
+                    const isExternal = /^https?:\/\//i.test(project.href ?? "");
+                    const mediaCount = getProjectMedia(project).length;
+
+                    return (
+                      <motion.article
+                        key={project.id}
+                        data-portfolio-card
+                        layout
+                        initial={{ opacity: 0, y: reduceMotion ? 0 : 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: reduceMotion ? 0 : 0.3,
+                          delay: reduceMotion ? 0 : index * 0.04,
+                        }}
+                        className="group w-[78vw] max-w-[20rem] shrink-0 snap-start sm:w-[42vw] sm:max-w-[21rem] lg:w-[34%] lg:max-w-[25rem] lg:flex-none"
+                      >
+                        <ProjectImage
+                          project={project}
+                          onOpen={() => setSelectedProject(project)}
+                          frameClassName="aspect-[1.38/1] rounded-[0.85rem]"
+                        />
+
+                        <div className="mt-3">
+                          <div className="flex items-center justify-between gap-3 border-b border-[#0b1020]/15 pb-2.5">
+                            <div className="flex min-w-0 items-center gap-2">
+                              <span className="font-poppins text-[10px] font-semibold tabular-nums text-[#0b1020]/35">
+                                {String(index + 1).padStart(2, "0")}
+                              </span>
+                              <p className="font-poppins truncate text-[9px] font-semibold uppercase tracking-[0.15em] text-[#0b1020]/50">
+                                {project.category}
+                              </p>
+                            </div>
+
+                            {mediaCount > 1 && (
+                              <span className="font-poppins shrink-0 text-[9px] text-[#0b1020]/35">
+                                {mediaCount} views
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="mt-2.5 flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                              <h3 className="font-sora break-words text-[clamp(1.15rem,2vw,1.65rem)] font-semibold leading-[1.02] tracking-[-0.06em] text-[#0b1020]">
+                                {project.title}
+                              </h3>
+                              <p className="font-poppins mt-2 line-clamp-2 max-w-lg text-[10px] leading-[1.6] text-[#0b1020]/60 sm:text-[11px]">
+                                {project.description}
+                              </p>
+                            </div>
+
+                            {project.href ? (
+                              <a
+                                href={project.href}
+                                target={isExternal ? "_blank" : undefined}
+                                rel={
+                                  isExternal
+                                    ? "noopener noreferrer"
+                                    : undefined
+                                }
+                                className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#0b1020]/15 text-[#0b1020] transition-colors hover:border-[#05cde5] hover:bg-[#05cde5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2"
+                                aria-label={"View " + project.title}
+                              >
+                                <ArrowUpRight
+                                  aria-hidden="true"
+                                  className="h-3.5 w-3.5"
+                                />
+                                {isExternal && (
+                                  <span className="sr-only">
+                                    {" "}(opens in a new tab)
+                                  </span>
+                                )}
+                              </a>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setSelectedProject(project)}
+                                className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#0b1020]/15 text-[#0b1020] transition-colors hover:border-[#05cde5] hover:bg-[#05cde5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2"
+                                aria-label={
+                                  "View " + project.title + " case study"
+                                }
+                              >
+                                <ArrowUpRight
+                                  aria-hidden="true"
+                                  className="h-3.5 w-3.5"
+                                />
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </motion.article>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          )}
+
+        <AnimatePresence>
+          {selectedProject && selectedIndex >= 0 && (
+            <ProjectLightbox
+              project={selectedProject}
+              projectIndex={selectedIndex}
+              projectCount={visibleProjects.length}
+              onClose={() => setSelectedProject(null)}
+              onPrevious={() => moveProject(-1)}
+              onNext={() => moveProject(1)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </section>
   );
 }

@@ -36,7 +36,7 @@ const teamMembers: TeamMember[] = [
     socials: [
       {
         platform: "linkedin",
-        href: "https://www.linkedin.com/public-profile/settings/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_self_edit_contact_info%3By8aaz6mySKaZ%2BNzUG6j8HA%3D%3D",
+        href: "https://www.linkedin.com/in/adeoye-marvelous-5b39763b6",
       },
       {
         platform: "instagram",
@@ -50,7 +50,7 @@ const teamMembers: TeamMember[] = [
     role: "Co-Founder & COO",
     description:
       "Connects strategy with day-to-day execution, keeping the team and its projects moving forward.",
-    image: "/team/emmanuel.jpg",
+    image: "/emmanuell.jpg",
     imagePosition: "center top",
     background: "#e1e6ec",
     socials: [
@@ -96,7 +96,7 @@ const teamMembers: TeamMember[] = [
     socials: [
       {
         platform: "linkedin",
-        href: "https://www.linkedin.com/in/iretomiwa-odetayo-716374417?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+        href: "https://www.linkedin.com/in/iretomiwa-odetayo-716374417",
       },
       {
         platform: "instagram",
