@@ -76,7 +76,7 @@ const teamMembers: TeamMember[] = [
     socials: [
       {
         platform: "linkedin",
-        href: "https://example.com/mayowa/linkedin",
+        href: "",
       },
       {
         platform: "instagram",

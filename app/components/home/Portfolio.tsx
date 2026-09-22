@@ -258,23 +258,39 @@ function ProjectLightbox({
       aria-modal="true"
       aria-labelledby="portfolio-lightbox-title"
       aria-describedby="portfolio-lightbox-description"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#07101d]/90 px-3 py-4 backdrop-blur-md sm:px-6 sm:py-6"
+      className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-[#07101d]/85 px-2 py-2 backdrop-blur-md sm:px-6 sm:py-6"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
+      <button
+        ref={closeButtonRef}
+        type="button"
+        onClick={onClose}
+        aria-label="Close project preview"
+        className="group fixed right-3 top-3 z-[70] inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/90 text-[#0b1020] shadow-[0_8px_24px_rgba(0,0,0,0.2)] backdrop-blur-md transition hover:border-[#05cde5] hover:bg-[#0b1020] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:right-6 sm:top-6 sm:h-auto sm:w-auto sm:gap-2 sm:px-3 sm:py-2"
+      >
+        <span className="font-poppins hidden text-[9px] font-semibold uppercase tracking-[0.12em] sm:inline">
+          Close
+        </span>
+        <X
+          aria-hidden="true"
+          className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-90"
+        />
+      </button>
+
       <motion.div
         initial={{ opacity: 0, y: 16, scale: 0.985 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 16, scale: 0.985 }}
         transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
-        className="relative grid max-h-[84vh] w-full max-w-5xl overflow-hidden rounded-[1.25rem] border border-white/15 bg-[#f9f9f9] shadow-[0_28px_100px_rgba(0,0,0,0.42)] lg:grid-cols-[minmax(0,1.45fr)_minmax(270px,0.65fr)]"
+        className="relative mx-auto my-2 flex max-h-[calc(100dvh-1rem)] w-full max-w-6xl flex-col overflow-y-auto overscroll-contain rounded-[1.35rem] border border-white/20 bg-[#f9f9f9] shadow-[0_30px_120px_rgba(0,0,0,0.46)] lg:my-0 lg:grid lg:max-h-[88vh] lg:grid-cols-[minmax(0,1.45fr)_minmax(290px,0.65fr)] lg:overflow-hidden"
       >
         <div
-          className="relative flex h-[40vh] min-h-[16rem] items-center justify-center overflow-hidden sm:h-[48vh] lg:h-auto lg:min-h-[min(62vh,560px)]"
+          className="relative flex h-[38dvh] min-h-[14rem] max-h-[25rem] shrink-0 items-center justify-center overflow-hidden sm:h-[48vh] sm:max-h-none lg:h-auto lg:min-h-[min(62vh,560px)]"
           style={{ backgroundColor: project.background }}
         >
-          <div className="relative z-10 flex h-full w-full items-center justify-center overflow-auto overscroll-contain">
+          <div className="relative z-10 flex h-full w-full items-center justify-center overflow-hidden">
             {mediaFailed || !currentMedia?.src ? (
               <div className="flex flex-col items-center justify-center gap-3 text-center text-[#0b1020]/50">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70">
@@ -296,7 +312,7 @@ function ProjectLightbox({
                 preload="metadata"
                 aria-label={currentMedia.alt}
                 onError={() => setMediaFailed(true)}
-                className="block h-auto w-auto max-h-[calc(40vh-2.5rem)] max-w-[calc(100%_-_2rem)] object-contain sm:max-h-[calc(48vh-3rem)] sm:max-w-[calc(100%_-_3rem)] lg:max-h-[calc(62vh-3.5rem)] lg:max-w-[calc(100%_-_3rem)]"
+                className="block h-auto w-auto max-h-[calc(38dvh-2.5rem)] max-w-[calc(100%_-_2rem)] object-contain sm:max-h-[calc(48vh-3rem)] sm:max-w-[calc(100%_-_3rem)] lg:max-h-[calc(62vh-3.5rem)] lg:max-w-[calc(100%_-_3rem)]"
               />
             ) : (
               <img
@@ -304,7 +320,7 @@ function ProjectLightbox({
                 alt={currentMedia.alt}
                 onError={() => setMediaFailed(true)}
                 style={{ objectPosition: currentMedia.position ?? "center" }}
-                className="block h-auto w-auto max-h-[calc(40vh-2.5rem)] max-w-[calc(100%_-_2rem)] object-contain sm:max-h-[calc(48vh-3rem)] sm:max-w-[calc(100%_-_3rem)] lg:max-h-[calc(62vh-3.5rem)] lg:max-w-[calc(100%_-_3rem)]"
+                className="block h-auto w-auto max-h-[calc(38dvh-2.5rem)] max-w-[calc(100%_-_2rem)] object-contain sm:max-h-[calc(48vh-3rem)] sm:max-w-[calc(100%_-_3rem)] lg:max-h-[calc(62vh-3.5rem)] lg:max-w-[calc(100%_-_3rem)]"
               />
             )}
           </div>
@@ -351,7 +367,7 @@ function ProjectLightbox({
               aria-label="Select project media"
               className="absolute inset-x-4 bottom-4 z-20 flex items-center justify-end sm:inset-x-5 sm:bottom-5"
             >
-              <div className="flex max-w-[78%] items-center gap-1.5 overflow-x-auto rounded-[0.85rem] border border-[#0b1020]/10 bg-[#f9f9f9]/88 p-1.5 shadow-[0_8px_24px_rgba(11,16,32,0.16)] backdrop-blur-sm">
+          <div className="flex max-w-[78%] touch-pan-x items-center gap-1.5 overflow-x-auto rounded-[0.85rem] border border-[#0b1020]/10 bg-[#f9f9f9]/88 p-1.5 shadow-[0_8px_24px_rgba(11,16,32,0.16)] backdrop-blur-sm">
                 {mediaItems.map((media, index) => {
                   const active = index === mediaIndex;
 
@@ -400,7 +416,7 @@ function ProjectLightbox({
           )}
         </div>
 
-        <aside className="flex max-h-[36vh] min-h-0 flex-col justify-between overflow-y-auto border-t border-[#0b1020]/10 bg-[#f9f9f9] px-5 py-5 sm:px-7 sm:py-6 lg:max-h-none lg:border-l lg:border-t-0 lg:px-8 lg:py-8">
+        <aside className="flex min-h-0 flex-col justify-between overflow-visible border-t border-[#0b1020]/10 bg-[#f9f9f9] px-5 py-5 sm:px-7 sm:py-6 lg:border-l lg:border-t-0 lg:px-8 lg:py-8 lg:overflow-y-auto">
           <div>
             <div className="flex items-center justify-between gap-4">
               <p className="font-poppins text-[9px] font-semibold uppercase tracking-[0.18em] text-[#0b1020]/50">
@@ -489,21 +505,6 @@ function ProjectLightbox({
           </div>
         </aside>
 
-        <button
-          ref={closeButtonRef}
-          type="button"
-          onClick={onClose}
-          aria-label="Close project preview"
-          className="group absolute right-3 top-3 z-30 inline-flex h-8 items-center gap-2 rounded-full border border-[#0b1020]/10 bg-[#f9f9f9]/90 px-2.5 text-[#0b1020] shadow-sm backdrop-blur-sm transition hover:border-[#05cde5] hover:bg-[#0b1020] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:right-4 sm:top-4"
-        >
-          <span className="font-poppins hidden text-[9px] font-semibold uppercase tracking-[0.12em] sm:inline">
-            Close
-          </span>
-          <X
-            aria-hidden="true"
-            className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-90"
-          />
-        </button>
       </motion.div>
     </motion.div>
   );
@@ -877,7 +878,8 @@ export default function Portfolio() {
                   id="portfolio-projects"
                   ref={carouselRef}
                   onScroll={handleCarouselScroll}
-                  className="flex cursor-grab snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-3 pr-[18vw] touch-pan-x select-none active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:pr-8"
+                  style={{ touchAction: "pan-x pan-y" }}
+                  className="flex cursor-grab snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-3 pr-[18vw] select-none active:cursor-grabbing [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:pr-8"
                 >
                   {visibleProjects.map((project, index) => {
                     const isExternal = /^https?:\/\//i.test(project.href ?? "");

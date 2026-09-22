@@ -9,6 +9,8 @@ import Contact from "./components/home/Contact";
 import Footer from "./components/common/Footer";
 import FAQ from "./components/home/FAQ";
 import ImpactStats from "./components/home/impactstats";
+import WhyHandiX from "./components/home/WhyHandiX";
+import WorkWithUs from "./components/home/WorkWithUs";
 
 export default function RootLayout({
   children,
@@ -20,8 +22,10 @@ export default function RootLayout({
       <body>
         <Navbar />
         <Hero/>
-        <ImpactStats />
-        <Services />
+               <Services />
+        <WhyHandiX/>
+         <ImpactStats />
+         <WorkWithUs/>
         <Portfolio/>
        <Testimonials/>
        <Team/>
