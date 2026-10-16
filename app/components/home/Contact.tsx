@@ -137,17 +137,17 @@ export default function Contact() {
       <section
         id="contact"
         aria-labelledby={`${componentId}-heading`}
-        className="scroll-mt-24 overflow-hidden bg-[#0b1020] py-10 sm:py-12 lg:py-14"
+        className="scroll-mt-24 overflow-hidden bg-[#f9f9f9] py-10 sm:py-14 lg:py-16"
       >
-        <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-8 lg:px-10">
+        <div className="mx-auto w-full max-w-[1080px] px-5 sm:px-7 lg:px-8">
           {/* SECTION TOP */}
-          <div className="mb-6 flex items-center justify-between gap-4 border-b border-white/15 pb-4">
-            <p className="font-poppins flex items-center gap-2.5 text-[9px] font-medium uppercase tracking-[0.2em] text-[#05cde5] sm:text-[10px]">
+          <div className="mb-6 flex items-center justify-between gap-4 border-b border-[#0b1020]/10 pb-5">
+            <p className="font-poppins flex items-center gap-2.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#0b1020]/45 sm:text-[10px]">
               <span className="h-px w-5 bg-[#05cde5]" />
               Contact us
             </p>
 
-            <span className="font-poppins hidden text-[9px] tracking-wide text-white/40 sm:block">
+            <span className="font-poppins hidden text-[9px] tracking-wide text-[#0b1020]/45 sm:block">
               Good things start with a conversation.
             </span>
           </div>
@@ -173,7 +173,7 @@ export default function Contact() {
             >
               <h2
                 id={`${componentId}-heading`}
-                className="font-sora max-w-[470px] text-[30px] font-semibold leading-[1.08] tracking-[-0.05em] text-[#f9f9f9] sm:text-[38px] lg:text-[44px]"
+                className="font-sora max-w-[480px] text-[clamp(1.65rem,3.5vw,2.65rem)] font-semibold leading-[1.07] tracking-[-0.05em] text-[#0b1020]"
               >
                 Your next chapter
                 <br />
@@ -183,30 +183,30 @@ export default function Contact() {
                 </span>
               </h2>
 
-              <p className="font-poppins mt-3 max-w-[350px] text-[12px] leading-6 text-white/55 sm:text-[13px]">
+              <p className="font-poppins mt-3 max-w-[350px] text-[12px] leading-5 text-[#0b1020]/50 sm:text-[13px]">
                 Let&apos;s talk about your brand, your next project or the
                 skill you want to learn.
               </p>
 
               {/* FREE CALL */}
-              <div className="mt-5 max-w-[380px] border-t border-white/15 pt-4">
+              <div className="mt-5 max-w-[380px] border-t border-[#0b1020]/10 pt-4">
                 <div className="flex items-center justify-between gap-4">
-                  <p className="font-poppins text-[8px] font-medium uppercase tracking-[0.18em] text-[#05cde5]">
+                  <p className="font-poppins text-[9px] font-semibold uppercase tracking-[0.15em] text-[#0b1020]/45">
                     Free consultation
                   </p>
 
-                  <span className="font-poppins text-[8px] uppercase tracking-[0.12em] text-white/30">
+                  <span className="font-poppins text-[8px] uppercase tracking-[0.12em] text-[#0b1020]/35">
                     30 min
                   </span>
                 </div>
 
-                <h3 className="font-sora mt-2.5 text-[17px] font-semibold leading-snug tracking-[-0.025em] text-[#f9f9f9] sm:text-[18px]">
+                <h3 className="font-sora mt-2.5 text-[17px] font-semibold leading-snug tracking-[-0.025em] text-[#0b1020] sm:text-[18px]">
                   Let&apos;s talk about your brand.
                 </h3>
 
                 <p
                   id={`${componentId}-consultation-description`}
-                  className="font-poppins mt-1.5 max-w-[340px] text-[10px] leading-5 text-white/50 sm:text-[11px]"
+                  className="font-poppins mt-1.5 max-w-[340px] text-[11px] leading-5 text-[#0b1020]/50"
                 >
                   A focused conversation about what you&apos;re building and
                   what the next move could look like.
@@ -247,8 +247,8 @@ export default function Contact() {
               </div>
 
               {/* DIRECT CONTACT */}
-              <div className="mt-5 max-w-[380px] border-t border-white/15 pt-4">
-                <p className="font-poppins text-[8px] font-medium uppercase tracking-[0.18em] text-white/30">
+              <div className="mt-5 max-w-[380px] border-t border-[#0b1020]/10 pt-4">
+                <p className="font-poppins text-[9px] font-semibold uppercase tracking-[0.15em] text-[#0b1020]/45">
                   Direct contact
                 </p>
 
@@ -261,9 +261,9 @@ export default function Contact() {
                       min-w-0 flex-1
                       items-center gap-2
                       text-[13px] font-medium
-                      text-white
+                      text-[#0b1020]
                       transition-colors
-                      hover:text-[#05cde5]
+                      hover:text-[#05aabd]
                       sm:text-[14px]
                     "
                   >
@@ -287,10 +287,10 @@ export default function Contact() {
                       flex h-8 w-8 shrink-0
                       items-center justify-center
                       rounded-full
-                      border border-white/10
-                      text-white/45
+                      border border-[#0b1020]/10
+                      text-[#0b1020]/45
                       transition-colors
-                      hover:border-white/20
+                      hover:border-[#0b1020]/20
                       hover:text-[#05cde5]
                     "
                   >
@@ -310,12 +310,12 @@ export default function Contact() {
                     font-poppins
                     mt-1 flex min-h-9
                     items-center gap-2
-                    border-t border-white/10
+                    border-t border-[#0b1020]/10
                     py-2.5
-                    text-[10px]
-                    text-white/50
+                    text-[11px]
+                    text-[#0b1020]/55
                     transition-colors
-                    hover:text-white
+                    hover:text-[#0b1020]
                   "
                 >
                   <MessageCircle
@@ -333,14 +333,14 @@ export default function Contact() {
                   </span>
                 </a>
 
-                <div className="flex items-center gap-2 border-t border-white/10 pt-2.5">
+                <div className="flex items-center gap-2 border-t border-[#0b1020]/10 pt-2.5">
                   <MapPin
                     size={11}
                     strokeWidth={1.5}
                     className="shrink-0 text-[#05cde5]/80"
                   />
 
-                  <span className="font-poppins text-[9px] text-white/40">
+                  <span className="font-poppins text-[10px] text-[#0b1020]/50">
                     Ogbomoso, Nigeria
                   </span>
                 </div>
@@ -365,11 +365,11 @@ export default function Contact() {
               }}
               className="min-w-0"
             >
-              <div className="overflow-hidden rounded-[16px] bg-[#f9f9f9]">
+              <div className="overflow-hidden rounded-[1rem] border border-[#0b1020]/[0.08] bg-white">
                 {/* FORM HEADER */}
                 <div className="flex items-start justify-between gap-5 border-b border-[#0b1020]/10 px-5 py-4 sm:px-6">
                   <div>
-                    <p className="font-poppins mb-1 text-[7px] font-semibold uppercase tracking-[0.18em] text-[#05aabd] sm:text-[8px]">
+                    <p className="font-poppins mb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#0b1020]/45">
                       Start a project
                     </p>
 
@@ -377,12 +377,12 @@ export default function Contact() {
                       Tell us what you have in mind.
                     </h3>
 
-                    <p className="font-poppins mt-1 text-[9px] leading-4 text-[#0b1020]/40 sm:text-[10px]">
+                    <p className="font-poppins mt-1 text-[11px] leading-5 text-[#0b1020]/50">
                       A few details are enough to get started.
                     </p>
                   </div>
 
-                  <span className="font-sora hidden text-[8px] text-[#0b1020]/18 sm:block">
+                  <span className="font-sora hidden text-[9px] text-[#0b1020]/30 sm:block">
                     01 — 04
                   </span>
                 </div>
@@ -391,11 +391,11 @@ export default function Contact() {
                   {/* SERVICE */}
                   <fieldset className="border-b border-[#0b1020]/10 px-5 py-3.5 sm:px-6">
                     <div className="mb-2.5 flex items-center gap-2">
-                      <span className="font-sora text-[8px] font-semibold text-[#05aabd]">
+                      <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
                         01
                       </span>
 
-                      <legend className="font-poppins text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/40">
+                      <legend className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45">
                         Interested in
                       </legend>
                     </div>
@@ -428,7 +428,7 @@ export default function Contact() {
                                 items-center gap-1.5
                                 rounded-full border
                                 px-2.5 py-1
-                                text-[8px]
+                                text-[10px]
                                 font-medium
                                 transition-all duration-200
                                 ${
@@ -455,13 +455,13 @@ export default function Contact() {
                     {/* NAME */}
                     <div className="border-b border-[#0b1020]/10 px-5 py-3.5 min-[560px]:border-b-0 min-[560px]:border-r sm:px-6">
                       <div className="mb-1.5 flex items-center gap-2">
-                        <span className="font-sora text-[8px] font-semibold text-[#05aabd]">
+                        <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
                           02
                         </span>
 
                         <label
                           htmlFor={`${componentId}-name`}
-                          className="font-poppins text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/40"
+                          className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45"
                         >
                           Your name
                         </label>
@@ -493,13 +493,13 @@ export default function Contact() {
                     {/* EMAIL */}
                     <div className="px-5 py-3.5 sm:px-6">
                       <div className="mb-1.5 flex items-center gap-2">
-                        <span className="font-sora text-[8px] font-semibold text-[#05aabd]">
+                        <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
                           03
                         </span>
 
                         <label
                           htmlFor={`${componentId}-email`}
-                          className="font-poppins text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/40"
+                          className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45"
                         >
                           Email
                         </label>
@@ -536,19 +536,19 @@ export default function Contact() {
                   <div className="px-5 py-3.5 sm:px-6">
                     <div className="mb-1.5 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-2">
-                        <span className="font-sora text-[8px] font-semibold text-[#05aabd]">
+                        <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
                           04
                         </span>
 
                         <label
                           htmlFor={`${componentId}-message`}
-                          className="font-poppins text-[8px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/40"
+                          className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45"
                         >
                           Your idea
                         </label>
                       </div>
 
-                      <span className="font-poppins text-[7px] uppercase tracking-[0.1em] text-[#0b1020]/18">
+                      <span className="font-poppins text-[8px] uppercase tracking-[0.1em] text-[#0b1020]/35">
                         Keep it simple
                       </span>
                     </div>
@@ -581,7 +581,7 @@ export default function Contact() {
                     <div className="flex items-center justify-between gap-4">
                       <p
                         id={`${componentId}-whatsapp-note`}
-                        className="font-poppins hidden max-w-[205px] text-[7px] leading-4 text-[#0b1020]/30 sm:block"
+                        className="font-poppins hidden max-w-[205px] text-[9px] leading-4 text-[#0b1020]/45 sm:block"
                       >
                         Opens in WhatsApp so you can review before sending.
                       </p>
@@ -635,7 +635,7 @@ export default function Contact() {
             role="status"
             aria-live="polite"
             aria-atomic="true"
-            className="font-poppins mt-3 text-[9px] leading-5 text-[#05cde5] empty:hidden"
+            className="font-poppins mt-3 text-[10px] leading-5 text-[#0b1020]/55 empty:hidden"
           >
             {status}
           </p>

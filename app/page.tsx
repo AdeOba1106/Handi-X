@@ -10,7 +10,7 @@ import Footer from "./components/common/Footer";
 import FAQ from "./components/home/FAQ";
 import ImpactStats from "./components/home/impactstats";
 import WhyHandiX from "./components/home/WhyHandiX";
-import WorkWithUs from "./components/home/WorkWithUs";
+// import WorkWithUs from "./components/home/WorkWithUs";
 
 export default function RootLayout({
   children,
@@ -25,7 +25,7 @@ export default function RootLayout({
                <Services />
         <WhyHandiX/>
          <ImpactStats />
-         <WorkWithUs/>
+         {/* <WorkWithUs/> */}
         <Portfolio/>
        <Testimonials/>
        <Team/>

@@ -4,6 +4,7 @@ import {
   PointerEvent as ReactPointerEvent,
   useEffect,
   useRef,
+  useState,
 } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Quote } from "lucide-react";
@@ -59,10 +60,13 @@ const infiniteTestimonials = [
 
 const Testimonials = () => {
   const reduceMotion = useReducedMotion();
+  const [isPaused, setIsPaused] = useState(false);
 
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const isDragging = useRef(false);
+  const isHovering = useRef(false);
+  const hasFocus = useRef(false);
   const dragStartX = useRef(0);
   const dragStartScrollLeft = useRef(0);
   const hasDragged = useRef(false);
@@ -93,6 +97,39 @@ const Testimonials = () => {
       window.removeEventListener("resize", positionInMiddle);
     };
   }, []);
+
+  /*
+    Advance one card at a time. Pause while the user is interacting
+    and respect their reduced-motion preference.
+  */
+  useEffect(() => {
+    if (reduceMotion || isPaused) return;
+
+    const interval = window.setInterval(() => {
+      const carousel = carouselRef.current;
+      const firstCard = carousel?.querySelector<HTMLElement>(
+        "[data-testimonial-card]",
+      );
+
+      if (
+        !carousel ||
+        !firstCard ||
+        isDragging.current ||
+        isHovering.current ||
+        hasFocus.current
+      ) {
+        return;
+      }
+
+      const gap = parseFloat(window.getComputedStyle(carousel).columnGap) || 0;
+      carousel.scrollBy({
+        left: firstCard.offsetWidth + gap,
+        behavior: "smooth",
+      });
+    }, 5000);
+
+    return () => window.clearInterval(interval);
+  }, [isPaused, reduceMotion]);
 
   /*
     Infinite-loop logic.
@@ -207,6 +244,21 @@ const Testimonials = () => {
         <div
           ref={carouselRef}
           onScroll={handleScroll}
+          onMouseEnter={() => {
+            isHovering.current = true;
+          }}
+          onMouseLeave={() => {
+            isHovering.current = false;
+          }}
+          onFocusCapture={() => {
+            hasFocus.current = true;
+          }}
+          onBlurCapture={(event) => {
+            const nextTarget = event.relatedTarget as Node | null;
+            if (!nextTarget || !event.currentTarget.contains(nextTarget)) {
+              hasFocus.current = false;
+            }
+          }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerEnd}
@@ -227,9 +279,11 @@ const Testimonials = () => {
             [scrollbar-width:none]
             [&::-webkit-scrollbar]:hidden
           "
+          aria-live="off"
         >
           {infiniteTestimonials.map((testimonial, index) => (
             <motion.article
+              data-testimonial-card
               key={`${testimonial.id}-${index}`}
               initial={{
                 opacity: 0,
@@ -317,17 +371,37 @@ const Testimonials = () => {
           ))}
         </div>
 
-        {/* Hint */}
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="h-[2px] w-8 rounded-full bg-[#0b1020]" />
-
-            <span className="h-[2px] w-3 rounded-full bg-[#0b1020]/15" />
+        {/* Auto-scroll control */}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="font-poppins text-[9px] font-medium uppercase tracking-[0.14em] text-[#0b1020]/45 sm:text-[10px]">
+              {reduceMotion
+                ? "Auto-scroll off"
+                : isPaused
+                  ? "Auto-scroll paused"
+                  : "Auto-scroll every 5 seconds"}
+            </p>
+            <p className="font-poppins mt-1 text-[9px] text-[#0b1020]/35 sm:text-[10px]">
+              Drag or swipe to explore
+            </p>
           </div>
 
-          <p className="font-poppins text-[8px] font-medium uppercase tracking-[0.16em] text-[#0b1020]/35 sm:text-[9px]">
-            Drag to explore
-          </p>
+          <button
+            type="button"
+            onClick={() => setIsPaused((paused) => !paused)}
+            disabled={Boolean(reduceMotion)}
+            aria-pressed={!isPaused && !reduceMotion}
+            aria-label={
+              reduceMotion
+                ? "Auto-scroll disabled by reduced-motion preference"
+                : isPaused
+                  ? "Resume auto-scroll"
+                  : "Pause auto-scroll"
+            }
+            className="rounded-full border border-[#0b1020]/15 px-4 py-2 font-poppins text-[10px] font-medium text-[#0b1020] transition hover:border-[#05cde5] hover:bg-[#05cde5]/10 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2"
+          >
+            {reduceMotion ? "Motion reduced" : isPaused ? "Play" : "Pause"}
+          </button>
         </div>
 
         {/* Bottom note */}
