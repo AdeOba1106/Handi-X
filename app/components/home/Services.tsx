@@ -54,7 +54,7 @@ const serviceGroups: ServiceGroup[] = [
       "Visual Identity Systems",
       "Brand Guidelines",
       "Sub-brand Structure",
-      "Brand Refresh & Rebranding",
+      "Communication System Setup",
     ],
   },
   {
@@ -65,10 +65,10 @@ const serviceGroups: ServiceGroup[] = [
     icon: Target,
     services: [
       "Brand Positioning",
-      "Audience & Competitor Research",
-      "Brand Messaging",
       "Content Strategy",
-      "Digital Marketing",
+      "Strategic planning and documentation",
+      "Brand Messaging",
+      "Go-to-Market Strategy",
       "Campaign Planning",
     ],
   },
