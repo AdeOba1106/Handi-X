@@ -22,7 +22,6 @@ type TeamMember = {
   socials: SocialLink[];
 };
 
-// Replace the example.com link and portrait paths with the final details.
 const teamMembers: TeamMember[] = [
   {
     id: "marvelous",
@@ -67,7 +66,7 @@ const teamMembers: TeamMember[] = [
   {
     id: "mayowa",
     name: "Mayowa Ajiboye",
-    role: " Lead, Media and Publicity",
+    role: "Lead, Media and Publicity",
     description:
       "Shapes how Handi-X shows up through media, storytelling and relationships that extend our reach.",
     image: "/ajiboyee.png",
@@ -229,51 +228,61 @@ export default function Team() {
         </motion.div>
 
         <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 sm:mt-10 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 lg:gap-5">
-          {teamMembers.map((member, index) => (
-            <motion.article
-              key={member.id}
-              initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.35,
-                delay: reduceMotion ? 0 : index * 0.04,
-              }}
-              className="group flex flex-col items-center text-center"
-            >
-              <div className="relative w-[104px] sm:w-[116px] lg:w-[126px]">
-                <div className="rounded-full border border-[#0b1020]/10 p-1 transition-colors duration-300 group-hover:border-[#05cde5]">
-                  <TeamPortrait member={member} />
+          {teamMembers.map((member, index) => {
+            const linkedin = member.socials.find(
+              (social) => social.platform === "linkedin"
+            );
+
+            return (
+              <motion.article
+                key={member.id}
+                initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.35,
+                  delay: reduceMotion ? 0 : index * 0.04,
+                }}
+                className="group flex flex-col items-center text-center"
+              >
+                <div className="relative w-[104px] sm:w-[116px] lg:w-[126px]">
+                  <div className="rounded-full border border-[#0b1020]/10 p-1 transition-colors duration-300 group-hover:border-[#05cde5]">
+                    <TeamPortrait member={member} />
+                  </div>
+
+                  {linkedin &&
+                    (linkedin.href ? (
+                      <a
+                        href={linkedin.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${member.name} on LinkedIn (opens in a new tab)`}
+                        className="absolute bottom-0 left-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#edf4ff] bg-[#05cde5] text-[#0b1020] transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b1020] focus-visible:ring-offset-2 focus-visible:ring-offset-[#edf4ff]"
+                      >
+                        <SocialIcon platform="linkedin" />
+                      </a>
+                    ) : (
+                      <span
+                        role="img"
+                        aria-label={`${member.name} does not have a LinkedIn profile`}
+                        title="No LinkedIn profile"
+                        className="absolute bottom-0 left-0 flex h-7 w-7 cursor-default items-center justify-center rounded-full border-2 border-[#edf4ff] bg-[#05cde5] text-[#0b1020] opacity-60"
+                      >
+                        <SocialIcon platform="linkedin" />
+                      </span>
+                    ))}
                 </div>
 
-                {(() => {
-                  const linkedin = member.socials.find(
-                    (social) => social.platform === "linkedin",
-                  );
+                <h3 className="font-sora mt-3 whitespace-nowrap text-[14px] font-semibold tracking-[-0.03em] text-[#0b1020] sm:text-[15px]">
+                  {member.name}
+                </h3>
 
-                  return linkedin ? (
-                    <a
-                      href={linkedin.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${member.name} on LinkedIn (opens in a new tab)`}
-                      className="absolute bottom-0 left-0 flex h-7 w-7 items-center justify-center rounded-full border-2 border-[#edf4ff] bg-[#05cde5] text-[#0b1020] transition-transform duration-200 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b1020] focus-visible:ring-offset-2 focus-visible:ring-offset-[#edf4ff]"
-                    >
-                      <SocialIcon platform="linkedin" />
-                    </a>
-                  ) : null;
-                })()}
-              </div>
-
-              <h3 className="font-sora mt-3 whitespace-nowrap text-[14px] font-semibold tracking-[-0.03em] text-[#0b1020] sm:text-[15px]">
-                {member.name}
-              </h3>
-
-              <p className="font-poppins mt-1 max-w-[145px] text-[11px] leading-4 text-[#0b1020]/70 sm:text-xs">
-                {member.role}
-              </p>
-            </motion.article>
-          ))}
+                <p className="font-poppins mt-1 max-w-[145px] text-[11px] leading-4 text-[#0b1020]/70 sm:text-xs">
+                  {member.role}
+                </p>
+              </motion.article>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -253,8 +253,9 @@ export default function Portfolio() {
 
   return (
     <section
+      id="portfolio"
       ref={sectionRef}
-      className="bg-white px-5 py-16 text-neutral-950 sm:px-8 sm:py-20 lg:px-12"
+      className="scroll-mt-24 bg-white px-5 py-16 text-neutral-950 sm:px-8 sm:py-20 lg:px-12"
     >
       <div className="mx-auto max-w-7xl">
         {selectedProject ? (
