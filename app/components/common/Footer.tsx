@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import {
   FaInstagram as Instagram,
@@ -25,34 +24,27 @@ const socialLinks = [
   },
 ];
 
+const linkClassName =
+  "font-poppins inline-flex min-h-9 items-center text-sm text-white/60 transition-colors hover:text-[#05cde5] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#05cde5]";
+
 export default function Footer() {
   return (
-    <footer className="overflow-hidden bg-[#070b17] text-white">
-      <div className="mx-auto w-full max-w-[1280px] px-4 pb-5 pt-10 sm:px-8 sm:pb-7 sm:pt-14 lg:px-12 lg:pt-16">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-b border-white/10 pb-8 sm:gap-x-10 sm:gap-y-10 sm:pb-12 lg:grid-cols-[1.25fr_0.75fr_0.75fr_1fr] lg:gap-14">
+    <footer className="overflow-hidden bg-[#0b1020] text-[#f9f9f9]">
+      <div className="mx-auto w-full max-w-[1080px] px-5 pb-5 pt-12 sm:px-7 sm:pb-6 sm:pt-14 lg:px-8 lg:pt-16">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-9 border-b border-white/10 pb-9 sm:gap-x-10 sm:pb-11 lg:grid-cols-[1.3fr_0.7fr_0.8fr_1.1fr] lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 min-w-0 lg:col-span-1">
-            <a
-              href="#"
-              aria-label="Handi-X home"
-              className="inline-flex max-w-full items-center"
-            >
-              <Image
-                src="/white and cyan.svg"
-                alt="Handi-X"
-                width={220}
-                height={60}
-                className="h-auto w-[145px] max-w-full object-contain object-left sm:w-[175px] lg:w-[190px]"
-              />
-            </a>
+            <p className="font-poppins text-[10px] font-semibold uppercase tracking-[0.16em] text-[#05cde5]">
+              Handi-X
+            </p>
 
-            <p className="font-sora mt-5 max-w-[300px] text-[25px] font-semibold leading-[1.08] tracking-[-0.05em] text-[#f9f9f9] min-[400px]:text-[28px] sm:mt-7 sm:text-4xl">
+            <p className="font-sora mt-3 max-w-[300px] text-2xl font-semibold leading-tight tracking-[-0.05em] sm:text-3xl">
               Building
               <br />
               <span className="text-[#05cde5]">Beyond Limits.</span>
             </p>
 
-            <p className="font-poppins mt-3 max-w-[310px] text-[12px] leading-5 text-white/55 sm:mt-4 sm:text-[13px] sm:leading-6">
+            <p className="font-poppins mt-3 max-w-[310px] text-xs leading-5 text-white/55 sm:text-[13px] sm:leading-6">
               Helping people and brands move from potential to possibility
               through creativity, technology and practical learning.
             </p>
@@ -60,18 +52,15 @@ export default function Footer() {
 
           {/* Explore */}
           <div className="min-w-0">
-            <p className="font-poppins text-[9px] font-medium uppercase tracking-[0.2em] text-[#05cde5] sm:text-[10px]">
+            <h2 className="font-poppins text-[10px] font-semibold uppercase tracking-[0.16em] text-[#05cde5]">
               Explore
-            </p>
+            </h2>
 
-            <nav aria-label="Footer navigation" className="mt-3 sm:mt-5">
-              <ul className="space-y-1.5 sm:space-y-3">
+            <nav aria-label="Footer navigation" className="mt-3">
+              <ul className="space-y-1">
                 {footerLinks.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      className="font-poppins inline-flex min-h-8 items-center text-xs text-white/65 transition-colors hover:text-[#05cde5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:text-sm"
-                    >
+                    <a href={link.href} className={linkClassName}>
                       {link.label}
                     </a>
                   </li>
@@ -80,13 +69,13 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* Connect */}
+          {/* Social links */}
           <div className="min-w-0">
-            <p className="font-poppins text-[9px] font-medium uppercase tracking-[0.2em] text-[#05cde5] sm:text-[10px]">
+            <h2 className="font-poppins text-[10px] font-semibold uppercase tracking-[0.16em] text-[#05cde5]">
               Connect
-            </p>
+            </h2>
 
-            <ul className="mt-3 space-y-1.5 sm:mt-5 sm:space-y-3">
+            <ul className="mt-3 space-y-1">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
 
@@ -96,9 +85,9 @@ export default function Footer() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-poppins inline-flex min-h-8 items-center gap-2 text-xs text-white/65 transition-colors hover:text-[#05cde5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] sm:text-sm"
+                      className={`${linkClassName} gap-2`}
                     >
-                      <Icon size={14} />
+                      <Icon size={14} aria-hidden="true" />
                       {social.label}
                     </a>
                   </li>
@@ -109,36 +98,44 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="col-span-2 min-w-0 lg:col-span-1">
-            <p className="font-poppins text-[9px] font-medium uppercase tracking-[0.2em] text-[#05cde5] sm:text-[10px]">
+            <h2 className="font-poppins text-[10px] font-semibold uppercase tracking-[0.16em] text-[#05cde5]">
               Start a conversation
-            </p>
+            </h2>
 
-            <p className="font-poppins mt-3 max-w-[280px] text-xs leading-5 text-white/60 sm:mt-5 sm:text-sm sm:leading-6">
+            <p className="font-poppins mt-3 max-w-[280px] text-xs leading-5 text-white/55 sm:text-[13px] sm:leading-6">
               Have an idea, a project or a skill you want to build?
             </p>
 
             <a
               href="mailto:heyhandix@gmail.com"
-              className="font-sora mt-3 inline-flex min-h-10 max-w-full items-center gap-2 break-all text-xs font-medium text-white transition-colors hover:text-[#05cde5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] min-[400px]:text-sm sm:mt-4 sm:text-base"
+              className="font-sora mt-3 inline-flex min-h-10 max-w-full items-center gap-2 break-all text-sm font-medium text-white transition-colors hover:text-[#05cde5] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#05cde5] sm:text-base"
             >
               <Mail size={15} className="shrink-0 text-[#05cde5]" />
               <span>heyhandix@gmail.com</span>
-              <ArrowUpRight size={14} className="shrink-0" />
+              <ArrowUpRight
+                size={14}
+                className="shrink-0"
+                aria-hidden="true"
+              />
             </a>
 
-            <p className="font-poppins mt-2 flex items-center gap-2 text-[11px] text-white/45 sm:mt-4 sm:text-xs">
-              <MapPin size={13} className="shrink-0 text-[#05cde5]" />
+            <p className="font-poppins mt-3 flex items-center gap-2 text-xs text-white/45">
+              <MapPin
+                size={14}
+                className="shrink-0 text-[#05cde5]"
+                aria-hidden="true"
+              />
               Ogbomoso, Nigeria
             </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-3 pt-4 sm:pt-5">
+        <div className="flex flex-col gap-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:pt-5">
           <p className="font-poppins text-[10px] leading-4 text-white/40 sm:text-[11px]">
             © {new Date().getFullYear()} Handi-X. All rights reserved.
           </p>
 
-          <p className="font-poppins text-right text-[10px] leading-4 text-white/40 sm:text-[11px]">
+          <p className="font-poppins text-[10px] leading-4 text-white/40 sm:text-[11px]">
             Made with intention.
           </p>
         </div>

@@ -50,7 +50,7 @@ const teamMembers: TeamMember[] = [
     role: "Co-Founder & COO",
     description:
       "Connects strategy with day-to-day execution, keeping the team and its projects moving forward.",
-    image: "/emmanuell.jpg",
+    image: "/emmanuel.png",
     imagePosition: "center top",
     background: "#e1e6ec",
     socials: [

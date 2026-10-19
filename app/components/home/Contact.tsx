@@ -13,15 +13,13 @@ import {
   ArrowUpRight,
   Check,
   Copy,
-  MessageCircle,
   MapPin,
+  MessageCircle,
 } from "lucide-react";
 
 const CONTACT_EMAIL = "heyhandix@gmail.com";
-
 const WHATSAPP_NUMBER = "2347051925253";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-
 const CALENDLY_URL = "https://calendly.com/heyhandix/30min";
 
 type CalendlyWindow = Window & {
@@ -37,6 +35,9 @@ const serviceOptions = [
   "Handi-X Academy",
   "Something else",
 ];
+
+const inputClassName =
+  "w-full rounded-lg border border-[#0b1020]/10 bg-[#f9f9f9] px-3.5 py-3 font-poppins text-sm text-[#0b1020] outline-none transition placeholder:text-[#0b1020]/35 focus:border-[#05cde5] focus:ring-2 focus:ring-[#05cde5]/15";
 
 export default function Contact() {
   const componentId = useId();
@@ -66,22 +67,16 @@ export default function Contact() {
     }
 
     event.preventDefault();
-
-    calendly.initPopupWidget({
-      url: CALENDLY_URL,
-    });
+    calendly.initPopupWidget({ url: CALENDLY_URL });
   }
 
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(CONTACT_EMAIL);
-
       setCopied(true);
       setStatus("Email address copied.");
 
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setStatus(`You can email us at ${CONTACT_EMAIL}.`);
     }
@@ -91,7 +86,6 @@ export default function Contact() {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-
     const name = String(formData.get("name") ?? "").trim();
     const email = String(formData.get("email") ?? "").trim();
     const message = String(formData.get("message") ?? "").trim();
@@ -111,14 +105,19 @@ export default function Contact() {
       `Interested in: ${selectedService || "Not specified"}`,
     ].join("\n");
 
-    setStatus(
-      "Continue in WhatsApp to review your message and tap Send."
-    );
+    setStatus("Opening WhatsApp. Review your message and tap Send.");
 
     window.location.assign(
       `${WHATSAPP_URL}?text=${encodeURIComponent(body)}`
     );
   }
+
+  const motionProps = {
+    initial: reduceMotion ? false : { opacity: 0, y: 14 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, amount: 0.15 },
+    transition: { duration: reduceMotion ? 0 : 0.4 },
+  };
 
   return (
     <>
@@ -137,374 +136,205 @@ export default function Contact() {
       <section
         id="contact"
         aria-labelledby={`${componentId}-heading`}
-        className="scroll-mt-24 overflow-hidden bg-[#f9f9f9] py-10 sm:py-14 lg:py-16"
+        className="scroll-mt-24 bg-[#f9f9f9] py-16 sm:py-20 lg:py-24"
       >
         <div className="mx-auto w-full max-w-[1080px] px-5 sm:px-7 lg:px-8">
-          {/* SECTION TOP */}
-          <div className="mb-6 flex items-center justify-between gap-4 border-b border-[#0b1020]/10 pb-5">
-            <p className="font-poppins flex items-center gap-2.5 text-[9px] font-semibold uppercase tracking-[0.2em] text-[#0b1020]/45 sm:text-[10px]">
+          <div className="mb-8 flex items-center justify-between gap-4 border-b border-[#0b1020]/10 pb-5">
+            <p className="font-poppins flex items-center gap-2.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#0b1020]/50">
               <span className="h-px w-5 bg-[#05cde5]" />
               Contact us
             </p>
 
-            <span className="font-poppins hidden text-[9px] tracking-wide text-[#0b1020]/45 sm:block">
+            <span className="font-poppins hidden text-xs text-[#0b1020]/45 sm:block">
               Good things start with a conversation.
             </span>
           </div>
 
-          <div className="grid items-start gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-10 xl:gap-12">
-            {/* =====================================================
-                LEFT
-            ====================================================== */}
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.15,
-              }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.4,
-              }}
-              className="min-w-0"
-            >
+          <div className="grid items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+            <motion.div {...motionProps} className="min-w-0">
               <h2
                 id={`${componentId}-heading`}
-                className="font-sora max-w-[480px] text-[clamp(1.65rem,3.5vw,2.65rem)] font-semibold leading-[1.07] tracking-[-0.05em] text-[#0b1020]"
+                className="font-sora max-w-[480px] text-[clamp(2rem,4vw,3.25rem)] font-semibold leading-[1.08] tracking-[-0.05em] text-[#0b1020]"
               >
-                Your next chapter
-                <br />
-
-                <span className="text-[#05cde5]">
-                  starts here.
-                </span>
+                Your next chapter{" "}
+                <span className="text-[#05cde5]">starts here.</span>
               </h2>
 
-              <p className="font-poppins mt-3 max-w-[350px] text-[12px] leading-5 text-[#0b1020]/50 sm:text-[13px]">
-                Let&apos;s talk about your brand, your next project or the
-                skill you want to learn.
+              <p className="font-poppins mt-4 max-w-[420px] text-sm leading-6 text-[#0b1020]/55">
+                Tell us about your brand, project or the skill you want to
+                learn. We’ll help you figure out the next step.
               </p>
 
-              {/* FREE CALL */}
-              <div className="mt-5 max-w-[380px] border-t border-[#0b1020]/10 pt-4">
-                <div className="flex items-center justify-between gap-4">
-                  <p className="font-poppins text-[9px] font-semibold uppercase tracking-[0.15em] text-[#0b1020]/45">
+              <div className="mt-8 max-w-[420px] divide-y divide-[#0b1020]/10 border-y border-[#0b1020]/10">
+                <div className="py-5">
+                  <p className="font-poppins text-[10px] font-semibold uppercase tracking-[0.15em] text-[#0b1020]/45">
                     Free consultation
                   </p>
 
-                  <span className="font-poppins text-[8px] uppercase tracking-[0.12em] text-[#0b1020]/35">
-                    30 min
-                  </span>
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <h3 className="font-sora text-base font-semibold text-[#0b1020]">
+                        Let’s talk about your brand.
+                      </h3>
+                      <p className="font-poppins mt-1 text-xs text-[#0b1020]/50">
+                        A focused 30-minute conversation.
+                      </p>
+                    </div>
+
+                    <a
+                      href={CALENDLY_URL}
+                      onClick={openCalendly}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-sora inline-flex min-h-10 items-center gap-2 rounded-lg bg-[#05cde5] px-4 py-2 text-xs font-semibold text-[#0b1020] transition-colors hover:bg-[#3dd8ea] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#05cde5]"
+                    >
+                      Book a call
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </a>
+                  </div>
                 </div>
 
-                <h3 className="font-sora mt-2.5 text-[17px] font-semibold leading-snug tracking-[-0.025em] text-[#0b1020] sm:text-[18px]">
-                  Let&apos;s talk about your brand.
-                </h3>
+                <div className="py-5">
+                  <p className="font-poppins text-[10px] font-semibold uppercase tracking-[0.15em] text-[#0b1020]/45">
+                    Email
+                  </p>
 
-                <p
-                  id={`${componentId}-consultation-description`}
-                  className="font-poppins mt-1.5 max-w-[340px] text-[11px] leading-5 text-[#0b1020]/50"
-                >
-                  A focused conversation about what you&apos;re building and
-                  what the next move could look like.
-                </p>
-
-                <a
-                  href={CALENDLY_URL}
-                  onClick={openCalendly}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-describedby={`${componentId}-consultation-description`}
-                  className="
-                    font-sora group mt-3
-                    flex min-h-[42px] w-full
-                    items-center justify-between
-                    rounded-[9px]
-                    bg-[#05cde5]
-                    px-4 py-2.5
-                    text-[10px] font-semibold
-                    text-[#0b1020]
-                    transition-colors
-                    hover:bg-[#3dd8ea]
-                    focus-visible:outline-2
-                    focus-visible:outline-offset-4
-                    focus-visible:outline-[#05cde5]
-                    sm:w-[215px]
-                  "
-                >
-                  <span>Book a Free Call</span>
-
-                  <ArrowUpRight
-                    aria-hidden="true"
-                    size={14}
-                    strokeWidth={1.8}
-                    className="transition-transform duration-300 motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
-                  />
-                </a>
-              </div>
-
-              {/* DIRECT CONTACT */}
-              <div className="mt-5 max-w-[380px] border-t border-[#0b1020]/10 pt-4">
-                <p className="font-poppins text-[9px] font-semibold uppercase tracking-[0.15em] text-[#0b1020]/45">
-                  Direct contact
-                </p>
-
-                <div className="mt-2 flex min-w-0 items-center gap-2">
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="
-                      font-sora
-                      inline-flex min-h-9
-                      min-w-0 flex-1
-                      items-center gap-2
-                      text-[13px] font-medium
-                      text-[#0b1020]
-                      transition-colors
-                      hover:text-[#05aabd]
-                      sm:text-[14px]
-                    "
-                  >
-                    <span className="break-all">
+                  <div className="mt-2 flex items-center gap-2">
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      className="font-sora min-w-0 break-all text-sm font-medium text-[#0b1020] transition-colors hover:text-[#05aabd]"
+                    >
                       {CONTACT_EMAIL}
-                    </span>
+                    </a>
 
-                    <ArrowUpRight
-                      aria-hidden="true"
-                      size={13}
-                      className="shrink-0 text-[#05cde5]"
-                    />
-                  </a>
-
-                  <button
-                    type="button"
-                    onClick={copyEmail}
-                    aria-label="Copy email address"
-                    title="Copy email address"
-                    className="
-                      flex h-8 w-8 shrink-0
-                      items-center justify-center
-                      rounded-full
-                      border border-[#0b1020]/10
-                      text-[#0b1020]/45
-                      transition-colors
-                      hover:border-[#0b1020]/20
-                      hover:text-[#05cde5]
-                    "
-                  >
-                    {copied ? (
-                      <Check size={13} />
-                    ) : (
-                      <Copy size={13} />
-                    )}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={copyEmail}
+                      aria-label="Copy email address"
+                      title="Copy email address"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#0b1020]/10 text-[#0b1020]/50 transition-colors hover:border-[#05cde5] hover:text-[#05aabd]"
+                    >
+                      {copied ? (
+                        <Check size={14} aria-hidden="true" />
+                      ) : (
+                        <Copy size={14} aria-hidden="true" />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <a
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="
-                    font-poppins
-                    mt-1 flex min-h-9
-                    items-center gap-2
-                    border-t border-[#0b1020]/10
-                    py-2.5
-                    text-[11px]
-                    text-[#0b1020]/55
-                    transition-colors
-                    hover:text-[#0b1020]
-                  "
+                  className="flex items-center gap-3 py-5 text-[#0b1020]/65 transition-colors hover:text-[#0b1020]"
                 >
                   <MessageCircle
-                    size={13}
-                    strokeWidth={1.5}
-                    className="shrink-0 text-[#05cde5]"
+                    size={17}
+                    className="shrink-0 text-[#05aabd]"
+                    aria-hidden="true"
                   />
 
-                  <span className="flex-1">
+                  <span className="font-poppins flex-1 text-sm">
                     +234 705 192 5253
                   </span>
 
-                  <span className="text-[8px] uppercase tracking-[0.1em] text-[#05cde5]">
+                  <span className="font-poppins text-[10px] font-semibold uppercase tracking-wide text-[#05aabd]">
                     WhatsApp
                   </span>
                 </a>
 
-                <div className="flex items-center gap-2 border-t border-[#0b1020]/10 pt-2.5">
+                <div className="flex items-center gap-3 py-5">
                   <MapPin
-                    size={11}
-                    strokeWidth={1.5}
-                    className="shrink-0 text-[#05cde5]/80"
+                    size={16}
+                    className="shrink-0 text-[#05aabd]"
+                    aria-hidden="true"
                   />
-
-                  <span className="font-poppins text-[10px] text-[#0b1020]/50">
+                  <span className="font-poppins text-sm text-[#0b1020]/55">
                     Ogbomoso, Nigeria
                   </span>
                 </div>
               </div>
             </motion.div>
 
-            {/* =====================================================
-                COMPACT FORM
-            ====================================================== */}
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-              whileInView={{
-                opacity: 1,
-                y: 0,
-              }}
-              viewport={{
-                once: true,
-                amount: 0.1,
-              }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.4,
-              }}
-              className="min-w-0"
-            >
-              <div className="overflow-hidden rounded-[1rem] border border-[#0b1020]/[0.08] bg-white">
-                {/* FORM HEADER */}
-                <div className="flex items-start justify-between gap-5 border-b border-[#0b1020]/10 px-5 py-4 sm:px-6">
-                  <div>
-                    <p className="font-poppins mb-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#0b1020]/45">
-                      Start a project
-                    </p>
+            <motion.div {...motionProps} className="min-w-0">
+              <div className="rounded-2xl border border-[#0b1020]/10 bg-white p-5 sm:p-7">
+                <div>
+                  <p className="font-poppins text-[10px] font-semibold uppercase tracking-[0.16em] text-[#05aabd]">
+                    Start a project
+                  </p>
 
-                    <h3 className="font-sora text-[18px] font-semibold leading-tight tracking-[-0.035em] text-[#0b1020] sm:text-[20px]">
-                      Tell us what you have in mind.
-                    </h3>
+                  <h3 className="font-sora mt-2 text-xl font-semibold tracking-[-0.03em] text-[#0b1020] sm:text-2xl">
+                    Tell us what you have in mind.
+                  </h3>
 
-                    <p className="font-poppins mt-1 text-[11px] leading-5 text-[#0b1020]/50">
-                      A few details are enough to get started.
-                    </p>
-                  </div>
-
-                  <span className="font-sora hidden text-[9px] text-[#0b1020]/30 sm:block">
-                    01 — 04
-                  </span>
+                  <p className="font-poppins mt-2 text-sm text-[#0b1020]/50">
+                    A few details are enough to get started.
+                  </p>
                 </div>
 
-                <form onSubmit={handleSubmit}>
-                  {/* SERVICE */}
-                  <fieldset className="border-b border-[#0b1020]/10 px-5 py-3.5 sm:px-6">
-                    <div className="mb-2.5 flex items-center gap-2">
-                      <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
-                        01
-                      </span>
+                <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                  <fieldset>
+                    <legend className="font-poppins mb-2 text-xs font-medium text-[#0b1020]/65">
+                      What are you interested in?
+                    </legend>
 
-                      <legend className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45">
-                        Interested in
-                      </legend>
-                    </div>
+                    <input
+                      type="hidden"
+                      name="service"
+                      value={selectedService}
+                    />
 
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-2">
                       {serviceOptions.map((service) => {
-                        const isSelected =
-                          selectedService === service;
+                        const isSelected = selectedService === service;
 
                         return (
-                          <label
+                          <button
                             key={service}
-                            className="cursor-pointer"
+                            type="button"
+                            aria-pressed={isSelected}
+                            onClick={() => setSelectedService(service)}
+                            className={`font-poppins rounded-full border px-3 py-2 text-xs transition-colors ${
+                              isSelected
+                                ? "border-[#0b1020] bg-[#0b1020] text-white"
+                                : "border-[#0b1020]/10 text-[#0b1020]/60 hover:border-[#05cde5] hover:text-[#0b1020]"
+                            }`}
                           >
-                            <input
-                              type="radio"
-                              name="service"
-                              value={service}
-                              checked={isSelected}
-                              onChange={() =>
-                                setSelectedService(service)
-                              }
-                              className="peer sr-only"
-                            />
-
-                            <span
-                              className={`
-                                font-poppins
-                                inline-flex min-h-[30px]
-                                items-center gap-1.5
-                                rounded-full border
-                                px-2.5 py-1
-                                text-[10px]
-                                font-medium
-                                transition-all duration-200
-                                ${
-                                  isSelected
-                                    ? "border-[#0b1020] bg-[#0b1020] text-white"
-                                    : "border-[#0b1020]/12 text-[#0b1020]/45 hover:border-[#0b1020]/30 hover:text-[#0b1020]"
-                                }
-                              `}
-                            >
-                              {service}
-
-                              {isSelected && (
-                                <span className="h-1 w-1 rounded-full bg-[#05cde5]" />
-                              )}
-                            </span>
-                          </label>
+                            {service}
+                          </button>
                         );
                       })}
                     </div>
                   </fieldset>
 
-                  {/* NAME + EMAIL */}
-                  <div className="grid border-b border-[#0b1020]/10 min-[560px]:grid-cols-2">
-                    {/* NAME */}
-                    <div className="border-b border-[#0b1020]/10 px-5 py-3.5 min-[560px]:border-b-0 min-[560px]:border-r sm:px-6">
-                      <div className="mb-1.5 flex items-center gap-2">
-                        <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
-                          02
-                        </span>
-
-                        <label
-                          htmlFor={`${componentId}-name`}
-                          className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45"
-                        >
-                          Your name
-                        </label>
-                      </div>
-
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <label
+                        htmlFor={`${componentId}-name`}
+                        className="font-poppins mb-2 block text-xs font-medium text-[#0b1020]/65"
+                      >
+                        Your name
+                      </label>
                       <input
                         id={`${componentId}-name`}
                         name="name"
                         type="text"
                         autoComplete="name"
                         placeholder="Full name"
-                        required
                         maxLength={100}
-                        className="
-                          font-sora
-                          block w-full
-                          border-0 bg-transparent
-                          p-0 text-[13px]
-                          font-medium
-                          text-[#0b1020]
-                          outline-none
-                          placeholder:font-normal
-                          placeholder:text-[#0b1020]/20
-                          focus:ring-0
-                        "
+                        required
+                        className={inputClassName}
                       />
                     </div>
 
-                    {/* EMAIL */}
-                    <div className="px-5 py-3.5 sm:px-6">
-                      <div className="mb-1.5 flex items-center gap-2">
-                        <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
-                          03
-                        </span>
-
-                        <label
-                          htmlFor={`${componentId}-email`}
-                          className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45"
-                        >
-                          Email
-                        </label>
-                      </div>
-
+                    <div>
+                      <label
+                        htmlFor={`${componentId}-email`}
+                        className="font-poppins mb-2 block text-xs font-medium text-[#0b1020]/65"
+                      >
+                        Email address
+                      </label>
                       <input
                         id={`${componentId}-email`}
                         name="email"
@@ -514,128 +344,57 @@ export default function Contact() {
                         autoCapitalize="none"
                         spellCheck={false}
                         placeholder="you@example.com"
-                        required
                         maxLength={254}
-                        className="
-                          font-sora
-                          block w-full
-                          border-0 bg-transparent
-                          p-0 text-[13px]
-                          font-medium
-                          text-[#0b1020]
-                          outline-none
-                          placeholder:font-normal
-                          placeholder:text-[#0b1020]/20
-                          focus:ring-0
-                        "
+                        required
+                        className={inputClassName}
                       />
                     </div>
                   </div>
 
-                  {/* MESSAGE */}
-                  <div className="px-5 py-3.5 sm:px-6">
-                    <div className="mb-1.5 flex items-center justify-between gap-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-sora text-[9px] font-semibold text-[#05aabd]">
-                          04
-                        </span>
-
-                        <label
-                          htmlFor={`${componentId}-message`}
-                          className="font-poppins text-[9px] font-semibold uppercase tracking-[0.14em] text-[#0b1020]/45"
-                        >
-                          Your idea
-                        </label>
-                      </div>
-
-                      <span className="font-poppins text-[8px] uppercase tracking-[0.1em] text-[#0b1020]/35">
-                        Keep it simple
-                      </span>
-                    </div>
-
+                  <div>
+                    <label
+                      htmlFor={`${componentId}-message`}
+                      className="font-poppins mb-2 block text-xs font-medium text-[#0b1020]/65"
+                    >
+                      Tell us about your idea
+                    </label>
                     <textarea
                       id={`${componentId}-message`}
                       name="message"
-                      rows={3}
-                      required
+                      rows={4}
                       maxLength={1500}
                       placeholder="What are you trying to build, improve or learn?"
-                      className="
-                        font-sora
-                        block min-h-[68px]
-                        w-full resize-none
-                        border-0 bg-transparent
-                        p-0 text-[12px]
-                        font-medium leading-5
-                        text-[#0b1020]
-                        outline-none
-                        placeholder:font-normal
-                        placeholder:text-[#0b1020]/20
-                        focus:ring-0
-                      "
+                      required
+                      className={`${inputClassName} min-h-28 resize-y`}
                     />
                   </div>
 
-                  {/* SUBMIT */}
-                  <div className="border-t border-[#0b1020]/10 bg-white/35 px-5 py-3 sm:px-6">
-                    <div className="flex items-center justify-between gap-4">
-                      <p
-                        id={`${componentId}-whatsapp-note`}
-                        className="font-poppins hidden max-w-[205px] text-[9px] leading-4 text-[#0b1020]/45 sm:block"
-                      >
-                        Opens in WhatsApp so you can review before sending.
-                      </p>
+                  <button
+                    type="submit"
+                    className="font-sora group flex min-h-12 w-full items-center justify-between rounded-lg bg-[#0b1020] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#162036] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#05cde5] focus-visible:ring-offset-2"
+                  >
+                    <span>Start a conversation</span>
+                    <ArrowUpRight
+                      size={16}
+                      aria-hidden="true"
+                      className="text-[#05cde5] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    />
+                  </button>
 
-                      <button
-                        type="submit"
-                        aria-describedby={`${componentId}-whatsapp-note`}
-                        className="
-                          font-sora group
-                          inline-flex min-h-[40px]
-                          w-full items-center
-                          justify-between gap-4
-                          rounded-[8px]
-                          bg-[#0b1020]
-                          px-3.5 py-2
-                          text-[9px]
-                          font-semibold
-                          text-white
-                          transition-colors
-                          duration-300
-                          hover:bg-[#162036]
-                          focus-visible:outline-none
-                          focus-visible:ring-2
-                          focus-visible:ring-[#05cde5]
-                          focus-visible:ring-offset-2
-                          sm:ml-auto
-                          sm:w-auto
-                          sm:min-w-[180px]
-                        "
-                      >
-                        <span>
-                          Start a conversation
-                        </span>
-
-                        <ArrowUpRight
-                          aria-hidden="true"
-                          size={12}
-                          strokeWidth={1.7}
-                          className="text-[#05cde5] transition-transform duration-300 motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
-                        />
-                      </button>
-                    </div>
-                  </div>
+                  <p className="font-poppins text-center text-xs text-[#0b1020]/45">
+                    This opens WhatsApp so you can review your message before
+                    sending.
+                  </p>
                 </form>
               </div>
             </motion.div>
           </div>
 
-          {/* STATUS */}
           <p
             role="status"
             aria-live="polite"
             aria-atomic="true"
-            className="font-poppins mt-3 text-[10px] leading-5 text-[#0b1020]/55 empty:hidden"
+            className="font-poppins mt-4 text-xs text-[#0b1020]/55 empty:hidden"
           >
             {status}
           </p>

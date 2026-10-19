@@ -11,31 +11,31 @@ import { Quote } from "lucide-react";
 
 const testimonials = [
   {
-    id: "01",
-    quote: "Paste your client’s actual feedback here.",
-    name: "Client full name",
-    role: "Founder, Business Name",
-    service: "Brand Xperience",
-    initials: "CN",
-  },
-  {
     id: "02",
-    quote: "Paste feedback about your branding or identity work here.",
-    name: "Client full name",
-    role: "Role, Company Name",
-    service: "Brand Architecture",
-    initials: "CN",
+    quote: "The flyer is beutifully designed, attractive, and professional. The choice of colours, layout, and text presentation makes it visually appealing and easy to understand. Overall, it is an excellent design, a great job Handi-X",
+    name: "Beulah Adebayo",
+    role: "Delight Crunchy",
+    service: "Brand Xperience",
+    initials: "BA",
+  },
+  // {
+  //   id: "04",
+  //   quote: "Paste feedback about your branding or identity work here.",
+  //   name: "Client full name",
+  //   role: "Role, Company Name",
+  //   service: "Brand Architecture",
+  //   initials: "CN",
+  // },
+  {
+    id: "01",
+    quote: "I'm very pleased with the quality of the work and the attention to detail. Thank you for an excellent service, I look forward to future collaborations.",
+    name: "Samuel Akinbola",
+    role: "Founder, World Of Light Printing Services",
+    service: "Brand Xperience",
+    initials: "SA",
   },
   {
     id: "03",
-    quote: "Paste feedback about your brand strategy service here.",
-    name: "Client full name",
-    role: "Role, Company Name",
-    service: "Brand Strategy",
-    initials: "CN",
-  },
-  {
-    id: "04",
     quote:
       "This training made me really understand how to design and think like a designer. The training periods were awesome, and I never have any regrets joining.",
     name: "Ayodeji Somotun",
